@@ -17,8 +17,6 @@ def draw_landmarks_on_image(rgb_image, detection_result):
 
   # Loop through the detected hands to visualize.
   for idx in range(len(hand_landmarks_list)):
-    # For the data format, see:
-    # https://developers.google.com/mediapipe/solutions/vision/hand_landmarker/python#handle_and_display_results
     hand_landmarks = hand_landmarks_list[idx]
     handedness = handedness_list[idx]
 
