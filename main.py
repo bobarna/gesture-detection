@@ -5,11 +5,16 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 import cv2
-from visu.visu import draw_landmarks_on_image
+from visu import draw_landmarks_on_image
 from detector.detector import create_detector
 import mediapipe as mp
 
-camera_capture = cv2.VideoCapture(1)
+import torch
+import torch.nn as nn
+
+camera_capture = cv2.VideoCapture(0)
+
+
 
 if not camera_capture.isOpened():
     print("Cannot open camera")
@@ -32,6 +37,7 @@ while True:
     detection_result = detector.detect(mp_frame)
 
     print(detection_result)
+    breakpoint()
     print(type(detection_result))
 
     annotated_frame = draw_landmarks_on_image(
