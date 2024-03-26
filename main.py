@@ -5,11 +5,11 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 import cv2
-from visu.visu import draw_landmarks_on_image
+from visu import draw_landmarks_on_image
 from detector.detector import create_detector
 import mediapipe as mp
 
-camera_capture = cv2.VideoCapture(1)
+camera_capture = cv2.VideoCapture(0)
 
 if not camera_capture.isOpened():
     print("Cannot open camera")

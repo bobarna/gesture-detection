@@ -4,6 +4,7 @@ from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 import numpy as np
 import cv2
+import math
 
 MARGIN = 10  # pixels
 FONT_SIZE = 1
@@ -14,6 +15,8 @@ def draw_landmarks_on_image(rgb_image, detection_result):
   hand_landmarks_list = detection_result.hand_landmarks
   handedness_list = detection_result.handedness
   annotated_image = np.copy(rgb_image)
+  prev_coordinate_x = None
+  prev_coordinate_y = None
 
   # Loop through the detected hands to visualize.
   for idx in range(len(hand_landmarks_list)):
@@ -40,6 +43,21 @@ def draw_landmarks_on_image(rgb_image, detection_result):
     y_coordinates = [landmark.y for landmark in hand_landmarks]
     text_x = int(min(x_coordinates) * width)
     text_y = int(min(y_coordinates) * height) - MARGIN
+
+    # First draft of velocity calculations
+    # Velocity currently represented as change in distance / frame
+    velocities = np.zeros(x_coordinates.shape[0])
+    for coord_index in np.arange(x_coordinates.shape[0]):
+        if prev_coordinate_x == None and prev_coordinate_y == None:
+           velocities[coord_index] == 0
+           prev_coordinate_x = x_coordinates[coord_index]
+           prev_coordinate_y = y_coordinates[coord_index]
+        else:
+           x1 = prev_coordinate_x
+           y1 = prev_coordinate_y
+           x2 = x_coordinates[coord_index]
+           y2 = y_coordinates[coord_index]
+           velocities[coord_index] = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
     # Draw handedness (left or right hand) on the image.
     cv2.putText(annotated_image, f"{handedness[0].category_name}",
