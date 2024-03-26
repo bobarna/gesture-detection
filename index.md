@@ -1,6 +1,4 @@
-Text can be **bold**, _italic_, or ~~strikethrough~~.
-
-[Link to another page](./another-page.html).
+Text can be **bold**, _italic_, or ~~strikethrough~~.  
 
 There should be whitespace between paragraphs.
 
@@ -92,9 +90,6 @@ end
 
 ![Octocat](https://github.githubassets.com/images/icons/emoji/octocat.png)
 
-### Large image
-
-![Branching](https://guides.github.com/activities/hello-world/branching.png)
 
 
 ### Definition lists can be used with HTML syntax.
