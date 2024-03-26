@@ -4,20 +4,22 @@ from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 import numpy as np
 import cv2
-import math
 
 MARGIN = 10  # pixels
 FONT_SIZE = 1
 FONT_THICKNESS = 1
 HANDEDNESS_TEXT_COLOR = (88, 205, 54) # vibrant green
+X_COORDINATES = None
+Y_COORDINATES = None
+
+def get_coordinates():
+  return X_COORDINATES, Y_COORDINATES
 
 def draw_landmarks_on_image(rgb_image, detection_result):
   hand_landmarks_list = detection_result.hand_landmarks
   handedness_list = detection_result.handedness
   annotated_image = np.copy(rgb_image)
-  prev_coordinate_x = None
-  prev_coordinate_y = None
-
+  
   # Loop through the detected hands to visualize.
   for idx in range(len(hand_landmarks_list)):
     # For the data format, see:
@@ -44,24 +46,14 @@ def draw_landmarks_on_image(rgb_image, detection_result):
     text_x = int(min(x_coordinates) * width)
     text_y = int(min(y_coordinates) * height) - MARGIN
 
-    # First draft of velocity calculations
-    # Velocity currently represented as change in distance / frame
-    velocities = np.zeros(x_coordinates.shape[0])
-    for coord_index in np.arange(x_coordinates.shape[0]):
-        if prev_coordinate_x == None and prev_coordinate_y == None:
-           velocities[coord_index] == 0
-           prev_coordinate_x = x_coordinates[coord_index]
-           prev_coordinate_y = y_coordinates[coord_index]
-        else:
-           x1 = prev_coordinate_x
-           y1 = prev_coordinate_y
-           x2 = x_coordinates[coord_index]
-           y2 = y_coordinates[coord_index]
-           velocities[coord_index] = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
-
+    global X_COORDINATES
+    X_COORDINATES = x_coordinates
+    global Y_COORDINATES
+    Y_COORDINATES = y_coordinates
+    
     # Draw handedness (left or right hand) on the image.
     cv2.putText(annotated_image, f"{handedness[0].category_name}",
                 (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
                 FONT_SIZE, HANDEDNESS_TEXT_COLOR, FONT_THICKNESS, cv2.LINE_AA)
 
-  return annotated_image
+  return annotated_image #, x_coordinates, y_coordinates
