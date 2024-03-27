@@ -1,4 +1,3 @@
-# Hand Gesture Detection
 
 ## Introduction
 
@@ -99,12 +98,18 @@ and implementation details using this method are described, before concluding wi
 ## What's Next
 
 Right now, our processes are not connected, meaning that each one performs individually and isn’t dependent on the others in any way. Hence, our next step is to look at how we can combine the information we are gathering based on shape, position, and velocity, and output something meaningful to the computer to describe motion.  
-| Task | Description | Anticipated Completion Date |
-|:----------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----|
-| Detection Model | Our model is very simple and only detects one shape. We need to broaden this to include many shapes. This may require training on a larger network and using a premade dataset. | 4/1 |
-| Hand Velocity | Refine and improve our results for detecting how fast the hand in moving | 4/1 |
-| Combining Techniques | We need to use all the information we are gathering from the hand to determine what motion the user is describing and translate that to the computer. | 4/10 |
-| Application | Stretch goal of applying gesture detection to some real-world application or simulator. | 4/15 |  
+- Detection Model
+    - Our model is very simple and only detects one shape. We need to broaden this to include many shapes. This may require training on a larger network and using a premade dataset.  
+    - Anticipated Completion Date: 4/1  
+- Hand Velocity  
+    - Refine and improve our results for detecting how fast the hand in moving  
+    - Anticipated Completion Date: 4/1  
+- Combining Techniques  
+    - We need to use all the information we are gathering from the hand to determine what motion the user is describing and translate that to the computer.  
+    - Anticipated Completion Date: 4/10  
+- Application  
+    - Stretch goal of applying gesture detection to some real-world application or simulator.  
+    - Anticipated Completion Date: 4/15    
 
 ## Work Division
 
