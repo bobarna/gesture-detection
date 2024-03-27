@@ -110,7 +110,7 @@ For detecting straight and bent fingers, we found that our fingers will either b
 Our method for calculating velocity gives us a sense of a moving versus a still hand. We still need to work out how we can better use this information to inform our system of the gesture being performed. We aim to use similar experimental techniques to gauge whether our system can correctly detect and classify more sophisticated gestures and motions. 
 To experiment with detecting shapes, we designed a neural network to detect whether a finger is pointing to the right. The accuracy it achieves for our dataset is 99%. Using this model with MediaPipe we can see the predictor is able to accurately predict whether the hand is pointing right. There are several limitations to this model though. One is that it is not very generic, and the prediction results are inaccurate with different users. This stems from using such a small dataset for training and will need to be addressed for the final report. Another drawback is that it is only detecting one shape, this limits our ability to communicate effectively, so we will need to improve the model or investigate other methods for detecting shape.  
 <img src="docs/assests/images/other_gesture.png?raw=true" alt="Detecting Other" width="500"/>
-<img src="docs/assests/images/point_right.PNG?raw=true" alt="Pointing Right" width="500"/>
+<img src="docs/assests/images/point_right.png?raw=true" alt="Pointing Right" width="500"/>
 
 
 ## What's Next
