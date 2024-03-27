@@ -1,8 +1,8 @@
 # Introduction
 
 People have a unique ability to have conversations with each other without ever saying a word. Hand gestures are regularly used as quick nonverbal forms of communication to convey things like “good job” with a thumbs up, or “hello” with a wave. Moreover, we are able to have much more meaningful hand gestures as well. Think of an airplane or a cargo ship being directed by a person on the ground. With just a few hand motions, the person directing can communicate with the driver how to steer this giant vehicle exactly where it needs to be.  
-Sometimes words are not the right tool for comminating something, especially when it comes to motion. For example, the person directing the aircraft would have difficulty describing with words to the pilot how to move the plane. Although it is possible, it is much easier to use hand motion to explain how the plane should move, and the results will be much better. Communicating motion to our computers faces a similar issue, however, computers are much less capable of understanding what we mean by our motion. 
 ![Aircraft](https://github.gatech.edu/bborcsok3/gesture-detection/blob/main/images/intro/aircraft.png)  
+Sometimes words are not the right tool for comminating something, especially when it comes to motion. For example, the person directing the aircraft would have difficulty describing with words to the pilot how to move the plane. Although it is possible, it is much easier to use hand motion to explain how the plane should move, and the results will be much better. Communicating motion to our computers faces a similar issue, however, computers are much less capable of understanding what we mean by our motion. 
 This is the issue our project aims to address. We are developing a system that can take hand gestures and convey the meaning of that motion to the computer. This involves detecting different hand shapes and tracking the movement of those hand shapes. This type of human-machine interaction will allow motions to be described to a computer in a more natural and more precise way. There are many applications for this, but some specifics we find fascinating are controlling the physics of a simulation and controlling the movement of a robot. These both require real time detection and interpretation of the motion, and allow the user to interact with the system in a way that communicating by other modes cannot achieve.  
 
 # Related Works  
@@ -34,6 +34,7 @@ recognition could be used (virtual environments, sign language translation, etc.
 importance of feature recognition in gesture recognition is emphasized, and previous approaches for this specifically are described at a high level. The authors 
 then discuss approaches for static and temporal gesture recognition, use of HMMs, and more. Sign language detection and future directions are described.  
 
+
 ### Section 2: Solutions Involving Feature Detection  
 - [4] Y. Fang, K. Wang, J. Cheng and H. Lu, "A Real-Time Hand Gesture Recognition Method," 2007 IEEE International Conference on Multimedia and Expo, Beijing, China, 
 2007, pp. 995-998  
@@ -46,6 +47,7 @@ unsolved’ problem at the time of publication. They cite previous works’ atte
 boosting detection, and scale-space frameworks for image geometric structures detection, before elaborating on their experimental method for detecting six 
 gestures (left-, right-, up-, and down-pointing thumbs, as well as an open hand and closed fist). The authors utilize a calculated ‘separability value’ to detect these 
 gestures with 0.938 accuracy.  
+
 
 ### Section 3: Solutions Involving Depth and Density  
 - [5] H. Tang et al., “Fast and robust dynamic hand gesture recognition via key frames extraction and feature fusion,” Neurocomputing, Volume 331, pp. 424-433.  
@@ -68,6 +70,7 @@ thresholding is specifically covered as a method for isolating hands, highlighte
 Other hand segmentation methods from previous works are covered at a high level before the authors describe gestures, elaborating on the categories established by 
 previous work, and the methods by which they can be classified, such as Hidden Markov Models, k-nearest neighbors, and more.  
 
+
 ### Section 4: Solutions Involving Data Training/Neural Networks  
 - [7] O. Köpüklü et al., “Real-time hand gesture detection and classification using convolutional neural networks,” IEEE International Conference on Automatic Face and 
 Gesture Recognition, 2019.  
@@ -88,15 +91,28 @@ including pre-existing feature detection and 3D-CNN based hand gesture recogniti
 covered, before the authors describe their ‘one-3D-CNN-per-modality’ methodology in detail. The results of their experiments with multiple datasets and 
 and implementation details using this method are described, before concluding with summary and implications/future directions for continued research.  
 
-# Methods
 
+# Methods
+The first step in our approach is to identify the hand. We use MediaPipe to extract the landmarks of the hand from an image. The landmarks of the hand are defined as follows: 
+![Interest Points](https://github.gatech.edu/bborcsok3/gesture-detection/blob/main/images/intro/hand_diagram.jpeg)
+Each landmark includes x, y, and z coordinates for both the image space and the global position estimates.  
+
+We can compare the coordinates of each interest point in a finger to determine the shape and position. We want to be able to calculate the angle of bend at every knuckle to determine if each finger is extended or bent. There are 4 points for each finger, so three vectors can be drawn by connecting these points. We obtain the cosine theta between vectors by dividing the inner product by the product of the magnitude of the two vectors. If the cosine theta is less than a threshold, then it means that the finger is bent. 
+Velocity is currently determined using the distance of each individual landmark from its previous position, for all 21 landmarks that comprise the hand, every frame that a hand is on-screen. As the hand moves between frames, the Euclidean distance of the current coordinates and the previous set of coordinates are calculated using NumPy arrays and vectorized array operations, to determine the velocity of each landmark in terms of change of distance per frame. This metric will likely require refinement as the project continues to a more standard measurement (units per second, for example) but right now the current velocity can be used as a visualization of the extent of change between contiguous hand positions. 
+Detecting hand shape can be done with a simple linear model since we have the hands interest points. We define a model with 3 layers, the input size is 63, then a hidden layer of size 256, and finally an output layer of size 2. We use ReLU activation functions between the layers and use SoftMax on the output. We had to collect data to train this model, and we used 1000 datapoints where the index finger was pointing right, and 1000 datapoints where the hand was in various shapes. 
 
 # Experiments
+For detecting straight and bent fingers, we found that our fingers will either be straight or bent at a large angle. However, the interest points from Mediapipe tend to represent the points in a straight line, rather than at the actual angle. So even when the finger is bent, the interest points still shows that the finger is straight. In the end, we use a large threshold of 0.9, so that the detector is more sensitive to the bending of the fingers. 
+Our method for calculating velocity gives us a sense of a moving versus a still hand. We still need to work out how we can better use this information to inform our system of the gesture being performed. We aim to use similar experimental techniques to gauge whether our system can correctly detect and classify more sophisticated gestures and motions. 
+To experiment with detecting shapes, we designed a neural network to detect whether a finger is pointing to the right. The accuracy it achieves for our dataset is 99%. Using this model with MediaPipe we can see the predictor is able to accurately predict whether the hand is pointing right. There are several limitations to this model though. One is that it is not very generic, and the prediction results are inaccurate with different users. This stems from using such a small dataset for training and will need to be addressed for the final report. Another drawback is that it is only detecting one shape, this limits our ability to communicate effectively, so we will need to improve the model or investigate other methods for detecting shape.  
+![Detecting Other](https://github.gatech.edu/bborcsok3/gesture-detection/blob/main/images/results/other_gesture.png) 
+![Detecting Pointing Right](https://github.gatech.edu/bborcsok3/gesture-detection/blob/main/images/results/point_right.png)
 
 
 # What's Next
 
 Right now, our processes are not connected, meaning that each one performs individually and isn’t dependent on the others in any way. Hence, our next step is to look at how we can combine the information we are gathering based on shape, position, and velocity, and output something meaningful to the computer to describe motion.  
+
 | Task | Description | Anticipated Completion Date |
 |:-----|:------------|:----------------------------|
 | Detection Model | Our model is very simple and only detects one shape. We need to broaden this to include many shapes. This may require training on a larger network and using a premade dataset. | 4/1 |
@@ -109,6 +125,7 @@ Right now, our processes are not connected, meaning that each one performs indiv
 | Member                       | Barnabas Borcsok | James Yu | Joseph Hardin | Justin Wit |
 |:-----------------------------|:-----------------|:---------|:--------------|:-----------|
 | Interesting Points Detection | V                |          |               |            |
+| MediaPipe Setup              | V                |          |               |            |
 | Neural Network               |                  |          |               | V          |
 | Finger Extend or Bend        |                  | V        |               |            |
 | Velocity Detection           |                  |          | V             |            |
