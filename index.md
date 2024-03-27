@@ -1,3 +1,4 @@
+A project that interpret the hand gesture by computer vision software.  
 
 ## Introduction
 
