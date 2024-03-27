@@ -10,9 +10,9 @@ Sometimes words are not the right tool for comminating something, especially whe
 
 This is the issue our project aims to address. We are developing a system that can take hand gestures and convey the meaning of that motion to the computer. This involves detecting different hand shapes and tracking the movement of those hand shapes. This type of human-machine interaction will allow motions to be described to a computer in a more natural and more precise way. There are many applications for this, but some specifics we find fascinating are controlling the physics of a simulation and controlling the movement of a robot. These both require real time detection and interpretation of the motion, and allow the user to interact with the system in a way that communicating by other modes cannot achieve.  
 
-## Related Works  
+## Related Work
 
-### Section 1: Summaries of Knowledge/Various Techniques  
+### Previous Techniques for Gesture Detection
 - [1] M. Oudah, A. Al-Naji, and J. Chahl, “Hand Gesture Recognition Based on Computer Vision: A Review of Techniques,” Journal of Imaging, vol. 6, no. 8, p. 73, Jul. 2020.  
   - https://www.mdpi.com/2313-433X/6/8/73  
   - This work covers a variety of approaches from prior literature, including using instrumented gloves and haptic technology with physical connection to the 
@@ -40,7 +40,7 @@ importance of feature recognition in gesture recognition is emphasized, and prev
 then discuss approaches for static and temporal gesture recognition, use of HMMs, and more. Sign language detection and future directions are described.  
 
 
-### Section 2: Solutions Involving Feature Detection  
+### Hand Feature Detection  
 - [4] Y. Fang, K. Wang, J. Cheng and H. Lu, "A Real-Time Hand Gesture Recognition Method," 2007 IEEE International Conference on Multimedia and Expo, Beijing, China, 
 2007, pp. 995-998  
   - https://ieeexplore.ieee.org/abstract/document/4284820?casa_token=68LJqOOS6DsAAAAA:8J-3JTymo5tRsv66jeLRbUZRkRJtagqqRxoSMPWGXkw9oA59eg4qp3z5WWAsgzvxnD2YvDpw  
@@ -53,8 +53,7 @@ boosting detection, and scale-space frameworks for image geometric structures de
 gestures (left-, right-, up-, and down-pointing thumbs, as well as an open hand and closed fist). The authors utilize a calculated ‘separability value’ to detect these 
 gestures with 0.938 accuracy.  
 
-
-### Section 3: Solutions Involving Depth and Density  
+### Using Depth and Density information
 - [5] H. Tang et al., “Fast and robust dynamic hand gesture recognition via key frames extraction and feature fusion,” Neurocomputing, Volume 331, pp. 424-433.  
   - https://www.sciencedirect.com/science/article/pii/S0925231218313663  
   - This work combines image entropy and density clustering to exploit the key frames from hand gesture video, improving the efficiency of recognition. The 
@@ -76,7 +75,7 @@ Other hand segmentation methods from previous works are covered at a high level 
 previous work, and the methods by which they can be classified, such as Hidden Markov Models, k-nearest neighbors, and more.  
 
 
-### Section 4: Solutions Involving Data Training/Neural Networks  
+### Data-driven Methods, Neural Networks
 - [7] O. Köpüklü et al., “Real-time hand gesture detection and classification using convolutional neural networks,” IEEE International Conference on Automatic Face and 
 Gesture Recognition, 2019.  
   - https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8756576  
@@ -97,7 +96,7 @@ covered, before the authors describe their ‘one-3D-CNN-per-modality’ methodo
 and implementation details using this method are described, before concluding with summary and implications/future directions for continued research.  
 
 
-# Methods
+## Our Method
 The first step in our approach is to identify the hand. We use MediaPipe to extract the landmarks of the hand from an image. The landmarks of the hand are defined as follows: 
 
 <img src="assets/images/hand_landmarks.png?raw=true" alt="Interest Points" width="1000"/>
@@ -110,7 +109,7 @@ Velocity is currently determined using the distance of each individual landmark 
 
 Detecting hand shape can be done with a simple linear model since we have the hands interest points. We define a model with 3 layers, the input size is 63, then a hidden layer of size 256, and finally an output layer of size 2. We use ReLU activation functions between the layers and use SoftMax on the output. We had to collect data to train this model, and we used 1000 datapoints where the index finger was pointing right, and 1000 datapoints where the hand was in various shapes. 
 
-# Experiments
+## Our Experiments
 For detecting straight and bent fingers, we found that our fingers will either be straight or bent at a large angle. However, the interest points from Mediapipe tend to represent the points in a straight line, rather than at the actual angle. So even when the finger is bent, the interest points still shows that the finger is straight. In the end, we use a large threshold of 0.9, so that the detector is more sensitive to the bending of the fingers. 
 
 Our method for calculating velocity gives us a sense of a moving versus a still hand. We still need to work out how we can better use this information to inform our system of the gesture being performed. We aim to use similar experimental techniques to gauge whether our system can correctly detect and classify more sophisticated gestures and motions. 
