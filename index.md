@@ -2,10 +2,10 @@
 
 People have a unique ability to have conversations with each other without ever saying a word. Hand gestures are regularly used as quick nonverbal forms of communication to convey things like “good job” with a thumbs up, or “hello” with a wave. Moreover, we are able to have much more meaningful hand gestures as well. Think of an airplane or a cargo ship being directed by a person on the ground. With just a few hand motions, the person directing can communicate with the driver how to steer this giant vehicle exactly where it needs to be.  
 Sometimes words are not the right tool for comminating something, especially when it comes to motion. For example, the person directing the aircraft would have difficulty describing with words to the pilot how to move the plane. Although it is possible, it is much easier to use hand motion to explain how the plane should move, and the results will be much better. Communicating motion to our computers faces a similar issue, however, computers are much less capable of understanding what we mean by our motion. 
-![aircraft](https://github.gatech.edu/bborcsok3/gesture-detection/images/intro/aircraft.png)  
+![aircraft](https://github.gatech.edu/bborcsok3/gesture-detection/blob/main/images/intro/aircraft.png)  
 This is the issue our project aims to address. We are developing a system that can take hand gestures and convey the meaning of that motion to the computer. This involves detecting different hand shapes and tracking the movement of those hand shapes. This type of human-machine interaction will allow motions to be described to a computer in a more natural and more precise way. There are many applications for this, but some specifics we find fascinating are controlling the physics of a simulation and controlling the movement of a robot. These both require real time detection and interpretation of the motion, and allow the user to interact with the system in a way that communicating by other modes cannot achieve.  
 
-# Related Works
+# Related Works  
 
 ### Section 1: Summaries of Knowledge/Various Techniques  
 - [1] M. Oudah, A. Al-Naji, and J. Chahl, “Hand Gesture Recognition Based on Computer Vision: A Review of Techniques,” Journal of Imaging, vol. 6, no. 8, p. 73, Jul. 2020.  
@@ -16,8 +16,8 @@ learning for gesture detection, and several applications of these techniques. Ea
 challenges, effectiveness, and more. Several other works are cited in the description of each of these methods through a summarization of knowledge 
 approach. The paper also identifies a ‘research gap’ in the field, wherein researchers are putting effort into gesture recognition in a virtual environment as 
 opposed to practical applications such as healthcare, and challenges for ongoing gesture recognition research/projects.  
-- [2] S. Mitra and T. Acharya, "Gesture Recognition: A Survey," in IEEE Transactions on Systems, Man, and Cybernetics, Part C (Applications and Reviews), vol. 37, no. 3, pp. 311-324, May 2007 
-  - https://ieeexplore.ieee.org/abstract/document/4154947?casa_token=TLKPdKUhEAAAAA:phFKQACVGDxS2JXZwkD9BzJeNvuj6YVtqigT2TSlyZDL1_aoNyngYuIcWqSxYT0k1jmxLJCJyA 
+- [2] S. Mitra and T. Acharya, "Gesture Recognition: A Survey," in IEEE Transactions on Systems, Man, and Cybernetics, Part C (Applications and Reviews), vol. 37, no. 3, pp. 311-324, May 2007  
+  - https://ieeexplore.ieee.org/abstract/document/4154947?casa_token=TLKPdKUhEAAAAA:phFKQACVGDxS2JXZwkD9BzJeNvuj6YVtqigT2TSlyZDL1_aoNyngYuIcWqSxYT0k1jmxLJCJyA  
   - This work covers a variety of approaches from prior literature, conducting a survey on the field as a whole and covering the specifics of several applications 
 utilizing different techniques, as well as highlighting challenges present in the field at the time of publication, and possible directions for future research. The 
 paper describes several applications for gesture recognition technology before going in depth about specific tools used for gesture recognition, such as Hidden 
@@ -33,6 +33,7 @@ prerequisite data collection, and more. The authors also describe the different 
 recognition could be used (virtual environments, sign language translation, etc.). In this summary, the works of previous authors in this realm are covered. The 
 importance of feature recognition in gesture recognition is emphasized, and previous approaches for this specifically are described at a high level. The authors 
 then discuss approaches for static and temporal gesture recognition, use of HMMs, and more. Sign language detection and future directions are described.  
+
 ### Section 2: Solutions Involving Feature Detection  
 - [4] Y. Fang, K. Wang, J. Cheng and H. Lu, "A Real-Time Hand Gesture Recognition Method," 2007 IEEE International Conference on Multimedia and Expo, Beijing, China, 
 2007, pp. 995-998  
@@ -45,6 +46,7 @@ unsolved’ problem at the time of publication. They cite previous works’ atte
 boosting detection, and scale-space frameworks for image geometric structures detection, before elaborating on their experimental method for detecting six 
 gestures (left-, right-, up-, and down-pointing thumbs, as well as an open hand and closed fist). The authors utilize a calculated ‘separability value’ to detect these 
 gestures with 0.938 accuracy.  
+
 ### Section 3: Solutions Involving Depth and Density  
 - [5] H. Tang et al., “Fast and robust dynamic hand gesture recognition via key frames extraction and feature fusion,” Neurocomputing, Volume 331, pp. 424-433.  
   - https://www.sciencedirect.com/science/article/pii/S0925231218313663  
@@ -58,14 +60,15 @@ extraction and feature detection results in higher accuracy than several previou
 methods on the same datasets.  
 - [6] J. Suarez and R. R. Murphy, "Hand gesture recognition with depth images: A review," 2012 IEEE RO-MAN: The 21st IEEE International Symposium on Robot and Human 
 Interactive Communication, Paris, France, 2012, pp. 411-417  
-  - https://ieeexplore.ieee.org/abstract/document/6343787?casa_token=QvzrzrAY8QYAAAAA:9Z46MbV2WH0l1cgcSgOl9CwGL0tjbGIT1DJHY0gg_LcQmZt-XiLrdQa8v9T07K-6VcQxQuYsQQ   
+  - https://ieeexplore.ieee.org/abstract/document/6343787?casa_token=QvzrzrAY8QYAAAAA:9Z46MbV2WH0l1cgcSgOl9CwGL0tjbGIT1DJHY0gg_LcQmZt-XiLrdQa8v9T07K-6VcQxQuYsQQ  
   - This work focuses specifically on the use of depth as the primary feature used for hand recognition, describing how depth cameras can function in circumstances 
 where video cameras may fail, the environments and applications where such methods are being employed for research purposes, and the effect of wide release 
 via the Microsoft Kinect (whether the libraries released with the sensor are being used, if they are being replaced with custom algorithms, and more). Depth 
 thresholding is specifically covered as a method for isolating hands, highlighted as an advantage of using depth cameras over color cameras for gesture recognition. 
 Other hand segmentation methods from previous works are covered at a high level before the authors describe gestures, elaborating on the categories established by 
 previous work, and the methods by which they can be classified, such as Hidden Markov Models, k-nearest neighbors, and more.  
-### Section 4: Solutions Involving Data Training/Neural Networks 
+
+### Section 4: Solutions Involving Data Training/Neural Networks  
 - [7] O. Köpüklü et al., “Real-time hand gesture detection and classification using convolutional neural networks,” IEEE International Conference on Automatic Face and 
 Gesture Recognition, 2019.  
   - https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8756576  
@@ -93,7 +96,7 @@ and implementation details using this method are described, before concluding wi
 
 # What's Next
 
-Right now, our processes are not connected, meaning that each one performs individually and isn’t dependent on the others in any way. Hence, our next step is to look at how we can combine the information we are gathering based on shape, position, and velocity, and output something meaningful to the computer to describe motion.
+Right now, our processes are not connected, meaning that each one performs individually and isn’t dependent on the others in any way. Hence, our next step is to look at how we can combine the information we are gathering based on shape, position, and velocity, and output something meaningful to the computer to describe motion.  
 | Task | Description | Anticipated Completion Date |
 |:-----|:------------|:----------------------------|
 | Detection Model | Our model is very simple and only detects one shape. We need to broaden this to include many shapes. This may require training on a larger network and using a premade dataset. | 4/1 |
