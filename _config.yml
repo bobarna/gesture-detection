@@ -3,6 +3,7 @@ description: Team Project. Computer Vision Spring 2024
 show_downloads: true
 google_analytics:
 theme: jekyll-theme-cayman
+include: _config.yml
 
 # remote_theme: pages-themes/cayman@v0.2.0
 # plugins:
