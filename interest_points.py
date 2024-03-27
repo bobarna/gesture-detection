@@ -59,6 +59,7 @@ def main():
             break
 
         pts = get_interest_points(frame)
+        frame = cv2.flip(frame, 1)
         if pts != []:
             pred = model(torch.tensor(pts.flatten(), dtype=torch.float32))
             if pred[1] > pred[0]:
@@ -66,8 +67,19 @@ def main():
             else:
                 print("Other")
 
-        # Display the resulting frame
-        cv2.imshow('Gesture Recognition', cv2.flip(frame, 1))
+            # Display the resulting frame
+            height, width, _ = frame.shape
+            x_coordinates = [landmark[0] for landmark in pts]
+            y_coordinates = [landmark[1] for landmark in pts]
+            text_x = int(min(x_coordinates) * width)
+            text_y = int(min(y_coordinates) * height)
+
+            # Draw handedness (left or right hand) on the image.
+            
+            cv2.putText(frame, "pointing right" if pred[1]>pred[0] else "other",
+                        (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
+                        1, (0, 0, 0), 3, cv2.LINE_AA)
+        cv2.imshow('Gesture Recognition', frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

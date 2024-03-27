@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split 
-from SimpleModel import SimpleModel
+from shape_detector.models.SimpleModel import SimpleModel
 
 
 def main():
