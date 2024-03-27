@@ -142,10 +142,14 @@ Right now, our processes are not connected, meaning that each one performs indiv
 | Neural Network               |                  |          |               | V          |
 | Finger Extend or Bend        |                  | V        |               |            |
 | Velocity Detection           |                  |          | V             |            |
-| Introduction                 |                  | V        |               | V          |
+| Introduction                 | V                | V        |               | V          |
 | Related Works                |                  | V        | V             |            |
-| Methods                      |                  | V        | V             | V          |
+| Methods                      | V                | V        | V             | V          |
 | Experiments                  |                  | V        | V             | V          |
 | What's Next                  |                  |          |               | V          |
 | Github Setup                 | V                |          |               |            |
-| Github Page Setup            |                  | V        |               |            |
+| Github Page                  |                  | V        |               | V          |
+| Detection Model              | V                | V        |               |            |
+| Hand Velocity                |                  |          | V             | V          |
+| Combining Techniques         | V                | V        | V             | V          |
+| Application                  | V                | V        | V             | V          |
