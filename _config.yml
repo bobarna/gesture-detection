@@ -1,9 +1,9 @@
 title: Hand Gesture Detection
-description: A project that interpret the hand gesture by computer vision software.
+# description: Interpreting hand gestures with computer vision software.
 show_downloads: true
 google_analytics:
 theme: jekyll-theme-cayman
 
-remote_theme: pages-themes/cayman@v0.2.0
-plugins:
-- jekyll-remote-theme # add this line to the plugins list if you already have one
+# remote_theme: pages-themes/cayman@v0.2.0
+# plugins:
+# - jekyll-remote-theme # add this line to the plugins list if you already have one

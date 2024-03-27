@@ -1,11 +1,11 @@
-# Introduction
+## Introduction
 
 People have a unique ability to have conversations with each other without ever saying a word. Hand gestures are regularly used as quick nonverbal forms of communication to convey things like “good job” with a thumbs up, or “hello” with a wave. Moreover, we are able to have much more meaningful hand gestures as well. Think of an airplane or a cargo ship being directed by a person on the ground. With just a few hand motions, the person directing can communicate with the driver how to steer this giant vehicle exactly where it needs to be.  
 ![Aircraft](https://github.gatech.edu/bborcsok3/gesture-detection/blob/main/images/intro/aircraft.png)  
 Sometimes words are not the right tool for comminating something, especially when it comes to motion. For example, the person directing the aircraft would have difficulty describing with words to the pilot how to move the plane. Although it is possible, it is much easier to use hand motion to explain how the plane should move, and the results will be much better. Communicating motion to our computers faces a similar issue, however, computers are much less capable of understanding what we mean by our motion. 
 This is the issue our project aims to address. We are developing a system that can take hand gestures and convey the meaning of that motion to the computer. This involves detecting different hand shapes and tracking the movement of those hand shapes. This type of human-machine interaction will allow motions to be described to a computer in a more natural and more precise way. There are many applications for this, but some specifics we find fascinating are controlling the physics of a simulation and controlling the movement of a robot. These both require real time detection and interpretation of the motion, and allow the user to interact with the system in a way that communicating by other modes cannot achieve.  
 
-# Related Works  
+## Related Works  
 
 ### Section 1: Summaries of Knowledge/Various Techniques  
 - [1] M. Oudah, A. Al-Naji, and J. Chahl, “Hand Gesture Recognition Based on Computer Vision: A Review of Techniques,” Journal of Imaging, vol. 6, no. 8, p. 73, Jul. 2020.  
@@ -109,18 +109,23 @@ To experiment with detecting shapes, we designed a neural network to detect whet
 ![Detecting Pointing Right](https://github.gatech.edu/bborcsok3/gesture-detection/blob/main/images/results/point_right.png)
 
 
-# What's Next
+## What's Next
 
 Right now, our processes are not connected, meaning that each one performs individually and isn’t dependent on the others in any way. Hence, our next step is to look at how we can combine the information we are gathering based on shape, position, and velocity, and output something meaningful to the computer to describe motion.  
+- Detection Model
+    - Our model is very simple and only detects one shape. We need to broaden this to include many shapes. This may require training on a larger network and using a premade dataset.  
+    - Anticipated Completion Date: 4/1  
+- Hand Velocity  
+    - Refine and improve our results for detecting how fast the hand in moving  
+    - Anticipated Completion Date: 4/1  
+- Combining Techniques  
+    - We need to use all the information we are gathering from the hand to determine what motion the user is describing and translate that to the computer.  
+    - Anticipated Completion Date: 4/10  
+- Application  
+    - Stretch goal of applying gesture detection to some real-world application or simulator.  
+    - Anticipated Completion Date: 4/15    
 
-| Task | Description | Anticipated Completion Date |
-|:-----|:------------|:----------------------------|
-| Detection Model | Our model is very simple and only detects one shape. We need to broaden this to include many shapes. This may require training on a larger network and using a premade dataset. | 4/1 |
-| Hand Velocity | Refine and improve our results for detecting how fast the hand in moving | 4/1 |
-| Combining Techniques | We need to use all the information we are gathering from the hand to determine what motion the user is describing and translate that to the computer. | 4/10 |
-| Application | Stretch goal of applying gesture detection to some real-world application or simulator. | 4/15 |
-
-# Work Division
+## Work Division
 
 | Member                       | Barnabas Borcsok | James Yu | Joseph Hardin | Justin Wit |
 |:-----------------------------|:-----------------|:---------|:--------------|:-----------|
