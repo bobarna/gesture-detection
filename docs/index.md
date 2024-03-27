@@ -100,7 +100,7 @@ and implementation details using this method are described, before concluding wi
 # Methods
 The first step in our approach is to identify the hand. We use MediaPipe to extract the landmarks of the hand from an image. The landmarks of the hand are defined as follows: 
 
-<img src="assets/images/hand_diagram.jpeg?raw=true" alt="Interest Points" width="1000"/>
+<img src="assets/images/landmarks.png?raw=true" alt="Interest Points" width="1000"/>
 
 Each landmark includes x, y, and z coordinates for both the image space and the global position estimates.  
 
