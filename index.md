@@ -2,7 +2,7 @@
 
 People have a unique ability to have conversations with each other without ever saying a word. Hand gestures are regularly used as quick nonverbal forms of communication to convey things like “good job” with a thumbs up, or “hello” with a wave. Moreover, we are able to have much more meaningful hand gestures as well. Think of an airplane or a cargo ship being directed by a person on the ground. With just a few hand motions, the person directing can communicate with the driver how to steer this giant vehicle exactly where it needs to be.  
 
-<img src="/docs/assests/images/aircraft.png?raw=true" alt="Aircraft Director" width="1000"/>
+<img src="docs/assests/images/aircraft.png?raw=true" alt="Aircraft Director" width="1000"/>
 
 Sometimes words are not the right tool for comminating something, especially when it comes to motion. For example, the person directing the aircraft would have difficulty describing with words to the pilot how to move the plane. Although it is possible, it is much easier to use hand motion to explain how the plane should move, and the results will be much better. Communicating motion to our computers faces a similar issue, however, computers are much less capable of understanding what we mean by our motion. 
 This is the issue our project aims to address. We are developing a system that can take hand gestures and convey the meaning of that motion to the computer. This involves detecting different hand shapes and tracking the movement of those hand shapes. This type of human-machine interaction will allow motions to be described to a computer in a more natural and more precise way. There are many applications for this, but some specifics we find fascinating are controlling the physics of a simulation and controlling the movement of a robot. These both require real time detection and interpretation of the motion, and allow the user to interact with the system in a way that communicating by other modes cannot achieve.  
@@ -97,7 +97,7 @@ and implementation details using this method are described, before concluding wi
 # Methods
 The first step in our approach is to identify the hand. We use MediaPipe to extract the landmarks of the hand from an image. The landmarks of the hand are defined as follows: 
 
-<img src="/docs/assests/images/hand_diagram.jpeg?raw=true" alt="Interest Points" width="1000"/>
+<img src="./docs/assests/images/hand_diagram.jpeg?raw=true" alt="Interest Points" width="1000"/>
 
 Each landmark includes x, y, and z coordinates for both the image space and the global position estimates.  
 
@@ -109,8 +109,8 @@ Detecting hand shape can be done with a simple linear model since we have the ha
 For detecting straight and bent fingers, we found that our fingers will either be straight or bent at a large angle. However, the interest points from Mediapipe tend to represent the points in a straight line, rather than at the actual angle. So even when the finger is bent, the interest points still shows that the finger is straight. In the end, we use a large threshold of 0.9, so that the detector is more sensitive to the bending of the fingers. 
 Our method for calculating velocity gives us a sense of a moving versus a still hand. We still need to work out how we can better use this information to inform our system of the gesture being performed. We aim to use similar experimental techniques to gauge whether our system can correctly detect and classify more sophisticated gestures and motions. 
 To experiment with detecting shapes, we designed a neural network to detect whether a finger is pointing to the right. The accuracy it achieves for our dataset is 99%. Using this model with MediaPipe we can see the predictor is able to accurately predict whether the hand is pointing right. There are several limitations to this model though. One is that it is not very generic, and the prediction results are inaccurate with different users. This stems from using such a small dataset for training and will need to be addressed for the final report. Another drawback is that it is only detecting one shape, this limits our ability to communicate effectively, so we will need to improve the model or investigate other methods for detecting shape.  
-<img src="/docs/assests/images/other_gesture.png?raw=true" alt="Detecting Other" width="500"/>
-<img src="/docs/assests/images/point_right.png?raw=true" alt="Pointing Right" width="500"/>
+<img src="../docs/assests/images/other_gesture.png?raw=true" alt="Detecting Other" width="500"/>
+<img src="/docs/assests/images/point_right.PNG?raw=true" alt="Pointing Right" width="500"/>
 
 
 ## What's Next
