@@ -24,7 +24,7 @@ def get_interest_points(detection_result):
         hand_landmarks = hand_landmarks_list[idx]
 
         # Draw the hand landmarks.
-        pts = np.array([([landmark.x, landmark.y, landmark.z]) for landmark in hand_landmarks])
+        pts.append(np.array([([landmark.x, landmark.y, landmark.z]) for landmark in hand_landmarks]))
 
     return pts
 
@@ -59,8 +59,6 @@ def main():
         mp_frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
         detection_result = detector.detect(mp_frame)
 
-        # breakpoint()
-
         # bent finger detection
         left_eb = [''] * 5
         right_eb = [''] * 5
@@ -79,29 +77,23 @@ def main():
         # hand shape detection
         pts = get_interest_points(detection_result)
         if pts != []:
-            pred = model(torch.tensor(pts.flatten(), dtype=torch.float32))
-            # if pred[1] > pred[0]:
-            #     print("Pointing Right")
-            # else:
-            #     print("Other")
+            for hand in pts:
+                pred = model(torch.tensor(hand.flatten(), dtype=torch.float32))
 
-            # Display the resulting frame
-            height, width, _ = frame.shape
-            x_coordinates = [landmark[0] for landmark in pts]
-            y_coordinates = [landmark[1] for landmark in pts]
-            text_x = int(min(x_coordinates) * width)
-            text_y = int(min(y_coordinates) * height)
+                # Display the resulting frame
+                height, width, _ = frame.shape
+                x_coordinates = [landmark[0] for landmark in hand]
+                y_coordinates = [landmark[1] for landmark in hand]
+                text_x = int(min(x_coordinates) * width)
+                text_y = int(min(y_coordinates) * height)
 
-            # Draw handedness (left or right hand) on the image.
-            
-            cv2.putText(frame, "pointing right" if pred[1]>pred[0] else "other",
-                        (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
-                        1, (0, 0, 0), 3, cv2.LINE_AA)
+                # Draw handedness (left or right hand) on the image.
+                
+                cv2.putText(frame, "pointing right" if pred[1]>pred[0] else "other",
+                            (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
+                            1, (0, 0, 0), 3, cv2.LINE_AA)
 
-
-
-
-
+        # draw on image
         annotated_frame = draw_landmarks_on_image(
             frame,
             detection_result
