@@ -36,6 +36,7 @@ def main():
 
     # define the model
     model = SimpleModel()
+    model_name = "fist_model"
     
     # train the model
     loss_fn = torch.nn.CrossEntropyLoss()
@@ -63,7 +64,7 @@ def main():
     accuracy = torch.sum(y_pred == y_test) / y_pred.shape[0]
     print(f"Accuracy: {accuracy:.2f}")
 
-    torch.save(model.state_dict(), 'fist_model')
+    torch.save(model.state_dict(), os.path.join("models", "saved_models", model_name))
 
 if __name__ == "__main__":
     main()

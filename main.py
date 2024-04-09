@@ -7,6 +7,7 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 import cv2
 from visu.visu import draw_landmarks_on_image, get_coordinates
 from detector.detector import create_detector
+from shape_detector.shape_detect import classify
 from bent_finger.shape import extend_or_bend
 import mediapipe as mp
 import numpy as np
@@ -37,7 +38,7 @@ def main():
 
     # Neural Network
     model = SimpleModel()
-    model_name = "simple_model"
+    model_name = "fist_model"
     path = os.path.join(SCRIPT_DIR, "shape_detector", "models", "saved_models", model_name)
     model.load_state_dict(torch.load(path))
     model.eval()
@@ -101,6 +102,8 @@ def main():
             for hand in pts:
                 pred = model(torch.tensor(hand.flatten(), dtype=torch.float32))
 
+                label = classify(pred)
+
                 # Display the resulting frame
                 height, width, _ = frame.shape
                 x_coordinates = [landmark[0] for landmark in hand]
@@ -110,7 +113,7 @@ def main():
 
                 # Draw handedness (left or right hand) on the image.
                 
-                cv2.putText(frame, "pointing right" if pred[1]>pred[0] else "other",
+                cv2.putText(frame, label,
                             (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
                             1, (0, 0, 0), 3, cv2.LINE_AA)
 
