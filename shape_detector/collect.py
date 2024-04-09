@@ -74,7 +74,7 @@ def main(args):
                 count += 1
 
         # check if collected all points
-        if count == args.i:
+        if count >= args.i:
             break
         
         # print updates
