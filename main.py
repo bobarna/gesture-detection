@@ -5,7 +5,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 import cv2
-from visu.visu import draw_landmarks_on_image
+from visu.visu import draw_landmarks_on_image, get_coordinates
 from detector.detector import create_detector
 from bent_finger.shape import extend_or_bend
 import mediapipe as mp
@@ -42,6 +42,10 @@ def main():
     model.load_state_dict(torch.load(path))
     model.eval()
 
+    # velocity variables
+    prev_coordinate_x = None
+    prev_coordinate_y = None
+
     ### Main Loop ###
     while True:
         ret, frame = camera_capture.read()
@@ -49,6 +53,23 @@ def main():
         if not ret:
             print("Can't receive frame. Exiting...")
             break
+
+
+        # First crack at velocity calculations for hand landmarks
+        # Velocity currently represented as (change in distance) / frame
+        current_coordinates_x, current_coordinates_y = get_coordinates()
+        velocities = None
+        if prev_coordinate_x == None and prev_coordinate_y == None:
+            prev_coordinate_x = current_coordinates_x
+            prev_coordinate_y = current_coordinates_y
+        else:
+            x1 = np.array(prev_coordinate_x)
+            y1 = np.array(prev_coordinate_y)
+            x2 = np.array(current_coordinates_x)
+            y2 = np.array(current_coordinates_y)
+            velocities = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+            # print(velocities)
+        
 
         # Process frame
         # mirror captured frame

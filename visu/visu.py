@@ -9,6 +9,11 @@ MARGIN = 10  # pixels
 FONT_SIZE = 1
 FONT_THICKNESS = 1
 HANDEDNESS_TEXT_COLOR = (88, 205, 54) # vibrant green
+X_COORDINATES = None
+Y_COORDINATES = None
+
+def get_coordinates():
+  return X_COORDINATES, Y_COORDINATES
 
 def draw_landmarks_on_image(rgb_image, detection_result):
   hand_landmarks_list = detection_result.hand_landmarks
@@ -40,6 +45,12 @@ def draw_landmarks_on_image(rgb_image, detection_result):
     y_coordinates = [landmark.y for landmark in hand_landmarks]
     text_x = int(min(x_coordinates) * width)
     text_y = int(min(y_coordinates) * height) - MARGIN
+
+    # Update glabal coords
+    global X_COORDINATES
+    X_COORDINATES = x_coordinates
+    global Y_COORDINATES
+    Y_COORDINATES = y_coordinates
 
     # Draw handedness (left or right hand) on the image.
     # if handedness[0].index == 0:
