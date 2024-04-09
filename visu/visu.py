@@ -17,6 +17,8 @@ def draw_landmarks_on_image(rgb_image, detection_result):
 
   # Loop through the detected hands to visualize.
   for idx in range(len(hand_landmarks_list)):
+    # For the data format, see:
+    # https://developers.google.com/mediapipe/solutions/vision/hand_landmarker/python#handle_and_display_results
     hand_landmarks = hand_landmarks_list[idx]
     handedness = handedness_list[idx]
 
@@ -40,8 +42,12 @@ def draw_landmarks_on_image(rgb_image, detection_result):
     text_y = int(min(y_coordinates) * height) - MARGIN
 
     # Draw handedness (left or right hand) on the image.
-    cv2.putText(annotated_image, f"{handedness[0].category_name}",
-                (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
-                FONT_SIZE, HANDEDNESS_TEXT_COLOR, FONT_THICKNESS, cv2.LINE_AA)
+    # if handedness[0].index == 0:
+    #   category = "Left"
+    # else:
+    #   category = "Right"
+    # cv2.putText(annotated_image, category,
+    #             (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
+    #             FONT_SIZE, HANDEDNESS_TEXT_COLOR, FONT_THICKNESS, cv2.LINE_AA)
 
   return annotated_image
