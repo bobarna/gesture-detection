@@ -1,2 +1,6 @@
 __pycache__
 venv
+
+# exclude data in folders
+shape_detector/data/fist/*
+shape_detector/data/palm/*
