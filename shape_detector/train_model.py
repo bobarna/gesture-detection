@@ -6,6 +6,10 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split 
 from models.SimpleModel import SimpleModel
+from models.BaseModel import BaseModel
+
+from matplotlib import pyplot as plt
+
 
 
 def load_data():
@@ -40,10 +44,13 @@ def main():
     
     # train the model
     loss_fn = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    optimizer = torch.optim.Adam(model.parameters(), weight_decay=0.0001)
     
-    n_epochs = 250
+    n_epochs = 100
     batch_size = 100
+
+    training_loss = []
+    validation_loss = []
     
     for epoch in range(n_epochs):
         for i in range(0, X_train.shape[0], batch_size):
@@ -55,16 +62,26 @@ def main():
             loss.backward()
             optimizer.step()
         print(f'Finished epoch {epoch}, latest loss {loss}')
+        training_loss.append(loss.item())
+        # breakpoint()
+        with torch.no_grad():
+            validation_loss.append(loss_fn(model(X_test), y_test).item())
     
     # compute accuracy (no_grad is optional)
     with torch.no_grad():
         y_pred = model(X_test)
         y_pred = torch.argmax(y_pred, axis=1)
 
+    
+
     accuracy = torch.sum(y_pred == y_test) / y_pred.shape[0]
     print(f"Accuracy: {accuracy:.2f}")
 
     torch.save(model.state_dict(), os.path.join("models", "saved_models", model_name))
 
+    # plt.plot(training_loss, label='train_loss')
+    # plt.plot(validation_loss,label='val_loss')
+    # plt.legend()
+    # plt.show()
 if __name__ == "__main__":
     main()

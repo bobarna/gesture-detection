@@ -9,5 +9,8 @@ def classify(pred):
     labels.sort()
     idx = torch.argmax(pred).item()
 
-    shape = labels[idx][2:] if pred[idx] > .8 else "none"
+    with torch.no_grad():
+        p = torch.softmax(pred, dim=0)
+
+    shape = labels[idx][2:] if p[idx] > .9999 else "none"
     return shape
