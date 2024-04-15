@@ -1,7 +1,7 @@
 # Gesture Detection
 Team Project. Computer Vision Spring 2024
 
-The project website is hosted from the `docs` folder at https://github.gatech.edu/pages/bborcsok3/gesture-detection/.
+The project website is hosted from the `docs` folder at https://bobarna.github.io/gesture-detection/ .
 
 ## Set up virtual environment
 
