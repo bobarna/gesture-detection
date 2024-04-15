@@ -1,11 +1,14 @@
 # Add current directory to Python path 
 import sys
 import os
+
+import visu
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 import cv2
-from visu.visu import draw_landmarks_on_image, get_coordinates
+from visu.visu import draw_landmarks_on_image, get_coordinates, crop_square
 from detector.detector import create_detector
 from shape_detector.shape_detect import classify
 from bent_finger.shape import extend_or_bend
@@ -15,6 +18,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from shape_detector.models.SimpleModel import SimpleModel
+
 
 def get_interest_points(detection_result):
     # extract
@@ -29,8 +33,9 @@ def get_interest_points(detection_result):
 
     return pts
 
+
 def main():
-    camera_capture = cv2.VideoCapture(0)
+    camera_capture = cv2.VideoCapture(1)
 
     if not camera_capture.isOpened():
         print("Cannot open camera")
@@ -55,7 +60,6 @@ def main():
             print("Can't receive frame. Exiting...")
             break
 
-
         # First crack at velocity calculations for hand landmarks
         # Velocity currently represented as (change in distance) / frame
         current_coordinates_x, current_coordinates_y = get_coordinates()
@@ -68,9 +72,8 @@ def main():
             y1 = np.array(prev_coordinate_y)
             x2 = np.array(current_coordinates_x)
             y2 = np.array(current_coordinates_y)
-            velocities = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+            velocities = ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
             # print(velocities)
-        
 
         # Process frame
         # mirror captured frame
@@ -89,7 +92,7 @@ def main():
             # print(f"handedness: {detection_result.handedness}")
             # print(f"landmark: {detection_result.hand_landmarks[0][4].z}")
             for i in range(num_hands):
-                if(detection_result.handedness[i][0].index == 0):
+                if (detection_result.handedness[i][0].index == 0):
                     left_eb = extend_or_bend(landmarks=detection_result.hand_landmarks[i])
                     print(f"left hand shape: {left_eb}\n")
                 else:
@@ -112,7 +115,7 @@ def main():
                 text_y = int(min(y_coordinates) * height)
 
                 # Draw handedness (left or right hand) on the image.
-                
+
                 cv2.putText(frame, label,
                             (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
                             1, (0, 0, 0), 3, cv2.LINE_AA)

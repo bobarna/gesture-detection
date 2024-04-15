@@ -12,53 +12,72 @@ HANDEDNESS_TEXT_COLOR = (88, 205, 54) # vibrant green
 X_COORDINATES = None
 Y_COORDINATES = None
 
+
 def get_coordinates():
-  return X_COORDINATES, Y_COORDINATES
+    return X_COORDINATES, Y_COORDINATES
+
 
 def draw_landmarks_on_image(rgb_image, detection_result):
-  hand_landmarks_list = detection_result.hand_landmarks
-  handedness_list = detection_result.handedness
-  annotated_image = np.copy(rgb_image)
+    hand_landmarks_list = detection_result.hand_landmarks
+    handedness_list = detection_result.handedness
+    annotated_image = np.copy(rgb_image)
 
-  # Loop through the detected hands to visualize.
-  for idx in range(len(hand_landmarks_list)):
-    # For the data format, see:
-    # https://developers.google.com/mediapipe/solutions/vision/hand_landmarker/python#handle_and_display_results
-    hand_landmarks = hand_landmarks_list[idx]
-    handedness = handedness_list[idx]
+    # Loop through the detected hands to visualize.
+    for idx in range(len(hand_landmarks_list)):
+        # For the data format, see:
+        # https://developers.google.com/mediapipe/solutions/vision/hand_landmarker/python#handle_and_display_results
+        hand_landmarks = hand_landmarks_list[idx]
+        handedness = handedness_list[idx]
 
-    # Draw the hand landmarks.
-    hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
-    hand_landmarks_proto.landmark.extend([
-      landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
-    ])
-    solutions.drawing_utils.draw_landmarks(
-      annotated_image,
-      hand_landmarks_proto,
-      solutions.hands.HAND_CONNECTIONS,
-      solutions.drawing_styles.get_default_hand_landmarks_style(),
-      solutions.drawing_styles.get_default_hand_connections_style())
+        # Draw the hand landmarks.
+        hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
+        hand_landmarks_proto.landmark.extend([
+            landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
+        ])
+        solutions.drawing_utils.draw_landmarks(
+            annotated_image,
+            hand_landmarks_proto,
+            solutions.hands.HAND_CONNECTIONS,
+            solutions.drawing_styles.get_default_hand_landmarks_style(),
+            solutions.drawing_styles.get_default_hand_connections_style())
 
-    # Get the top left corner of the detected hand's bounding box.
-    height, width, _ = annotated_image.shape
-    x_coordinates = [landmark.x for landmark in hand_landmarks]
-    y_coordinates = [landmark.y for landmark in hand_landmarks]
-    text_x = int(min(x_coordinates) * width)
-    text_y = int(min(y_coordinates) * height) - MARGIN
+        # Get the top left corner of the detected hand's bounding box.
+        height, width, _ = annotated_image.shape
+        x_coordinates = [landmark.x for landmark in hand_landmarks]
+        y_coordinates = [landmark.y for landmark in hand_landmarks]
+        text_x = int(min(x_coordinates) * width)
+        text_y = int(min(y_coordinates) * height) - MARGIN
 
-    # Update glabal coords
-    global X_COORDINATES
-    X_COORDINATES = x_coordinates
-    global Y_COORDINATES
-    Y_COORDINATES = y_coordinates
+        # Update global coordinates
+        global X_COORDINATES
+        X_COORDINATES = x_coordinates
+        global Y_COORDINATES
+        Y_COORDINATES = y_coordinates
 
-    # Draw handedness (left or right hand) on the image.
-    # if handedness[0].index == 0:
-    #   category = "Left"
-    # else:
-    #   category = "Right"
-    # cv2.putText(annotated_image, category,
-    #             (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
-    #             FONT_SIZE, HANDEDNESS_TEXT_COLOR, FONT_THICKNESS, cv2.LINE_AA)
+        # Draw handedness (left or right hand) on the image.
+        # if handedness[0].index == 0:
+        #   category = "Left"
+        # else:
+        #   category = "Right"
+        # cv2.putText(annotated_image, category,
+        #             (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
+        #             FONT_SIZE, HANDEDNESS_TEXT_COLOR, FONT_THICKNESS, cv2.LINE_AA)
 
-  return annotated_image
+    return annotated_image
+
+
+def crop_square(frame):
+    # Determine the dimensions of the frame
+    height, width = frame.shape[:2]
+
+    # Find the size of the smallest dimension
+    RES = min(height, width)
+
+    # Calculate cropping coordinates
+    top = (height - RES) // 2
+    left = (width - RES) // 2
+
+    # Crop to a square frame
+    frame = frame[top:top + RES, left:left + RES]
+
+    return frame
