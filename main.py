@@ -15,6 +15,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from shape_detector.models.SimpleModel import SimpleModel
+from shape_detector.models.BaseModel import BaseModel
 
 def get_interest_points(detection_result):
     # extract
@@ -91,17 +92,16 @@ def main():
             for i in range(num_hands):
                 if(detection_result.handedness[i][0].index == 0):
                     left_eb = extend_or_bend(landmarks=detection_result.hand_landmarks[i])
-                    print(f"left hand shape: {left_eb}\n")
+                    # print(f"left hand shape: {left_eb}\n")
                 else:
                     right_eb = extend_or_bend(landmarks=detection_result.hand_landmarks[i])
-                    print(f"right hand shape: {right_eb}\n")
+                    # print(f"right hand shape: {right_eb}\n")
 
         # hand shape detection
         pts = get_interest_points(detection_result)
         if pts != []:
             for hand in pts:
                 pred = model(torch.tensor(hand.flatten(), dtype=torch.float32))
-
                 label = classify(pred)
 
                 # Display the resulting frame
