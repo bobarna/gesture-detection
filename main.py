@@ -2,6 +2,7 @@
 import sys
 import os
 
+import sim.stable_fluid
 import visu
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -34,12 +35,25 @@ def get_interest_points(detection_result):
     return pts
 
 
+RES = None
+
+
 def main():
     camera_capture = cv2.VideoCapture(1)
 
     if not camera_capture.isOpened():
         print("Cannot open camera")
         exit()
+    else:
+        # Initialize fluid simulation
+        ret, frame = camera_capture.read()
+        frame = visu.visu.crop_square(frame)
+
+        global RES
+        RES = frame.shape[0]
+        print(f"RES INITIALIZED AS {RES}")
+        sim.stable_fluid.restart_simulation(RES)
+        print(f"Fluid simulation initialized with resolution {RES}x{RES}")
 
     # Neural Network
     model = SimpleModel()
@@ -55,6 +69,7 @@ def main():
     ### Main Loop ###
     while True:
         ret, frame = camera_capture.read()
+        frame = visu.visu.crop_square(frame)
 
         if not ret:
             print("Can't receive frame. Exiting...")
@@ -99,8 +114,22 @@ def main():
                     right_eb = extend_or_bend(landmarks=detection_result.hand_landmarks[i])
                     print(f"right hand shape: {right_eb}\n")
 
+        only_thumb_bent = ['b', 'e', 'e', 'e', 'e']
+        if left_eb == only_thumb_bent or right_eb == only_thumb_bent:
+            sim.stable_fluid.GRAVITY_COEFF += 10.0
+            if sim.stable_fluid.GRAVITY_COEFF >= 300:
+                sim.stable_fluid.GRAVITY_COEFF = 300
+            print(f"sim.stable_fluid.GRAVITY_COEFF = {sim.stable_fluid.GRAVITY_COEFF}")
+        only_pinky_bent = ['e', 'e', 'e', 'e', 'b']
+        if left_eb == only_pinky_bent or right_eb == only_pinky_bent:
+            sim.stable_fluid.GRAVITY_COEFF -= 10.0
+            if sim.stable_fluid.GRAVITY_COEFF <= -300:
+                sim.stable_fluid.GRAVITY_COEFF = -300
+            print(f"sim.stable_fluid.GRAVITY_COEFF = {sim.stable_fluid.GRAVITY_COEFF}")
+
         # hand shape detection
         pts = get_interest_points(detection_result)
+        mouse_data = np.zeros(8, dtype=np.float32)
         if pts != []:
             for hand in pts:
                 pred = model(torch.tensor(hand.flatten(), dtype=torch.float32))
@@ -119,6 +148,18 @@ def main():
                 cv2.putText(frame, label,
                             (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
                             1, (0, 0, 0), 3, cv2.LINE_AA)
+
+                if label == 'fist':
+                    # get mouse data for stepping fluid simulation
+                    mouse_data = visu.visu.get_mouse_data_from_hand_landmarks(hand, RES)
+                else:
+                    # generate new color
+                    visu.visu.reset_mouse()
+
+        sim.stable_fluid.step(mouse_data)
+
+        # Set fluid sim as background
+        frame = sim.stable_fluid.dyes_pair.cur.to_numpy()
 
         # draw on image
         annotated_frame = draw_landmarks_on_image(

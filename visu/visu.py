@@ -71,13 +71,51 @@ def crop_square(frame):
     height, width = frame.shape[:2]
 
     # Find the size of the smallest dimension
-    RES = min(height, width)
+    res = min(height, width)
 
     # Calculate cropping coordinates
-    top = (height - RES) // 2
-    left = (width - RES) // 2
+    top = (height - res) // 2
+    left = (width - res) // 2
 
     # Crop to a square frame
-    frame = frame[top:top + RES, left:left + RES]
+    frame = frame[top:top + res, left:left + res]
+
+    # Resize to 512x512
+    frame = cv2.resize(frame, (512, 512), interpolation=cv2.INTER_AREA)
 
     return frame
+
+
+PREV_MOUSE = None
+CURR_COLOR = None
+
+
+def get_mouse_data_from_hand_landmarks(hand_landmarks, res):
+    mouse_data = np.zeros(8, dtype=np.float32)
+    # Position information
+    # swap coords for different coordinate system
+    x_coord = np.mean(np.array([lm[1] for lm in hand_landmarks]))
+    y_coord = np.mean(np.array([lm[0] for lm in hand_landmarks]))
+    mxy = np.array([x_coord, y_coord], dtype=np.float32) * res
+    #print(y_coord, x_coord, mxy, res)
+
+    global PREV_MOUSE, CURR_COLOR
+    if PREV_MOUSE is None:
+        PREV_MOUSE = mxy
+        CURR_COLOR = (np.random.rand(3) * 0.7) + 0.3
+    else:
+        mdir = mxy - PREV_MOUSE
+        mdir = mdir / (np.linalg.norm(mdir) + 1e-5)
+        mouse_data[0], mouse_data[1] = mdir[0], mdir[1]
+        mouse_data[2], mouse_data[3] = mxy[0], mxy[1]
+
+        mouse_data[4:7] = CURR_COLOR
+        PREV_MOUSE = mxy
+
+    return mouse_data
+
+
+def reset_mouse():
+    global PREV_MOUSE, CURR_COLOR
+    PREV_MOUSE = None
+    CURR_COLOR = None

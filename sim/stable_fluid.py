@@ -14,15 +14,15 @@ import taichi as ti
 
 res = 512
 dt = 0.03
-p_jacobi_iters = 400  # 40 for a quicker but less accurate result
+p_jacobi_iters = 100  # 40 for a quicker but less accurate result
 f_strength = 10000.0
 curl_strength = 0
-time_c = 2
+time_c = 1
 maxfps = 30
 dye_decay = 1 - 1 / (maxfps * time_c)
 force_radius = res / 2.0
 debug = False
-GRAVITY_COEFF = 300
+GRAVITY_COEFF = 0 #300
 
 # How to run:
 #   `python stable_fluid.py`: use the jacobi iteration to solve the linear system.
@@ -46,7 +46,7 @@ arch = args.arch
 if arch in ["x64", "cpu", "arm64"]:
     ti.init(arch=ti.cpu)
 elif arch in ["cuda", "gpu"]:
-    ti.init(arch=ti.gpu)
+    ti.init(arch=ti.vulkan)
 else:
     raise ValueError("Only CPU and CUDA backends are supported for now.")
 
@@ -62,8 +62,9 @@ _new_dye_buffer = ti.Vector.field(3, float, shape=(res, res))
 
 
 def restart_simulation(new_res):
-    global res
+    global res, force_radius
     res = new_res
+    force_radius = res / 2.0
     global _velocities, _new_velocities
     global velocity_divs, velocity_curls
     global _pressures, _new_pressures
@@ -77,6 +78,11 @@ def restart_simulation(new_res):
     _new_pressures = ti.field(float, shape=(res, res))
     _dye_buffer = ti.Vector.field(3, float, shape=(res, res))
     _new_dye_buffer = ti.Vector.field(3, float, shape=(res, res))
+
+    global velocities_pair, pressures_pair, dyes_pair
+    velocities_pair = TexPair(_velocities, _new_velocities)
+    pressures_pair = TexPair(_pressures, _new_pressures)
+    dyes_pair = TexPair(_dye_buffer, _new_dye_buffer)
 
 
 class TexPair:
@@ -139,11 +145,13 @@ def advect(vf: ti.template(), qf: ti.template(), new_qf: ti.template()):
         p = ti.Vector([i, j]) + 0.5
         p = backtrace(vf, p, dt)
         new_qf[i, j] = bilerp(qf, p) * dye_decay
+    print(dye_decay)
 
 
 @ti.kernel
-def apply_impulse(vf: ti.template(), dyef: ti.template(), imp_data: ti.types.ndarray()):
-    g_dir = -ti.Vector([0, 9.8]) * GRAVITY_COEFF
+def apply_impulse(vf: ti.template(), dyef: ti.template(), imp_data: ti.types.ndarray(), gravity: ti.float32):
+    ## FLIP GRAVITY DIRECTION
+    g_dir = -ti.Vector([-9.8, 0.0]) * gravity
     # imp_data:
     # [0:2]: normalized delta direction
     # [2:4]: current mouse xy
@@ -252,13 +260,22 @@ def solve_pressure_jacobi():
         pressures_pair.swap()
 
 
+@ti.kernel
+def dummy_update(x: int, y:int):
+    for i, j in ti.ndrange((x, x + 10), (y, y + 10)):
+        dyes_pair.cur[i, j] = ti.Vector([1, 1, 1])
+
+
 def step(mouse_data):
+    #dummy_update(int(mouse_data[2]), int(mouse_data[3]))
+    #return
+
     advect(velocities_pair.cur, velocities_pair.cur, velocities_pair.nxt)
     advect(velocities_pair.cur, dyes_pair.cur, dyes_pair.nxt)
     velocities_pair.swap()
     dyes_pair.swap()
 
-    apply_impulse(velocities_pair.cur, dyes_pair.cur, mouse_data)
+    apply_impulse(velocities_pair.cur, dyes_pair.cur, mouse_data, GRAVITY_COEFF)
 
     divergence(velocities_pair.cur)
 
