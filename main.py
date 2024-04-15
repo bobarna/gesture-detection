@@ -1,11 +1,15 @@
 # Add current directory to Python path 
 import sys
 import os
+
+import sim.stable_fluid
+import visu
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 import cv2
-from visu.visu import draw_landmarks_on_image, get_coordinates
+from visu.visu import draw_landmarks_on_image, get_coordinates, crop_square
 from detector.detector import create_detector
 from shape_detector.shape_detect import classify
 from bent_finger.shape import extend_or_bend
@@ -15,6 +19,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from shape_detector.models.SimpleModel import SimpleModel
+
 
 def get_interest_points(detection_result):
     # extract
@@ -29,12 +34,26 @@ def get_interest_points(detection_result):
 
     return pts
 
+
+RES = None
+
+
 def main():
-    camera_capture = cv2.VideoCapture(0)
+    camera_capture = cv2.VideoCapture(1)
 
     if not camera_capture.isOpened():
         print("Cannot open camera")
         exit()
+    else:
+        # Initialize fluid simulation
+        ret, frame = camera_capture.read()
+        frame = visu.visu.crop_square(frame)
+
+        global RES
+        RES = frame.shape[0]
+        print(f"RES INITIALIZED AS {RES}")
+        sim.stable_fluid.restart_simulation(RES)
+        print(f"Fluid simulation initialized with resolution {RES}x{RES}")
 
     # Neural Network
     model = SimpleModel()
@@ -50,11 +69,11 @@ def main():
     ### Main Loop ###
     while True:
         ret, frame = camera_capture.read()
+        frame = visu.visu.crop_square(frame)
 
         if not ret:
             print("Can't receive frame. Exiting...")
             break
-
 
         # First crack at velocity calculations for hand landmarks
         # Velocity currently represented as (change in distance) / frame
@@ -68,9 +87,8 @@ def main():
             y1 = np.array(prev_coordinate_y)
             x2 = np.array(current_coordinates_x)
             y2 = np.array(current_coordinates_y)
-            velocities = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+            velocities = ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
             # print(velocities)
-        
 
         # Process frame
         # mirror captured frame
@@ -89,15 +107,29 @@ def main():
             # print(f"handedness: {detection_result.handedness}")
             # print(f"landmark: {detection_result.hand_landmarks[0][4].z}")
             for i in range(num_hands):
-                if(detection_result.handedness[i][0].index == 0):
+                if (detection_result.handedness[i][0].index == 0):
                     left_eb = extend_or_bend(landmarks=detection_result.hand_landmarks[i])
                     print(f"left hand shape: {left_eb}\n")
                 else:
                     right_eb = extend_or_bend(landmarks=detection_result.hand_landmarks[i])
                     print(f"right hand shape: {right_eb}\n")
 
+        only_thumb_bent = ['b', 'e', 'e', 'e', 'e']
+        if left_eb == only_thumb_bent or right_eb == only_thumb_bent:
+            sim.stable_fluid.GRAVITY_COEFF += 10.0
+            if sim.stable_fluid.GRAVITY_COEFF >= 300:
+                sim.stable_fluid.GRAVITY_COEFF = 300
+            print(f"sim.stable_fluid.GRAVITY_COEFF = {sim.stable_fluid.GRAVITY_COEFF}")
+        only_pinky_bent = ['e', 'e', 'e', 'e', 'b']
+        if left_eb == only_pinky_bent or right_eb == only_pinky_bent:
+            sim.stable_fluid.GRAVITY_COEFF -= 10.0
+            if sim.stable_fluid.GRAVITY_COEFF <= -300:
+                sim.stable_fluid.GRAVITY_COEFF = -300
+            print(f"sim.stable_fluid.GRAVITY_COEFF = {sim.stable_fluid.GRAVITY_COEFF}")
+
         # hand shape detection
         pts = get_interest_points(detection_result)
+        mouse_data = np.zeros(8, dtype=np.float32)
         if pts != []:
             for hand in pts:
                 pred = model(torch.tensor(hand.flatten(), dtype=torch.float32))
@@ -112,10 +144,22 @@ def main():
                 text_y = int(min(y_coordinates) * height)
 
                 # Draw handedness (left or right hand) on the image.
-                
+
                 cv2.putText(frame, label,
                             (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
                             1, (0, 0, 0), 3, cv2.LINE_AA)
+
+                if label == 'fist':
+                    # get mouse data for stepping fluid simulation
+                    mouse_data = visu.visu.get_mouse_data_from_hand_landmarks(hand, RES)
+                else:
+                    # generate new color
+                    visu.visu.reset_mouse()
+
+        sim.stable_fluid.step(mouse_data)
+
+        # Set fluid sim as background
+        frame = sim.stable_fluid.dyes_pair.cur.to_numpy()
 
         # draw on image
         annotated_frame = draw_landmarks_on_image(
