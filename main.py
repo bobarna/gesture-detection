@@ -159,7 +159,7 @@ def main():
         sim.stable_fluid.step(mouse_data)
 
         # Set fluid sim as background
-        frame = sim.stable_fluid.dyes_pair.cur.to_numpy()
+        frame = 0.3*np.array((frame/255.0), dtype=np.float32) + sim.stable_fluid.dyes_pair.cur.to_numpy()
 
         # draw on image
         annotated_frame = draw_landmarks_on_image(

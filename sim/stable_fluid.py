@@ -46,7 +46,7 @@ arch = args.arch
 if arch in ["x64", "cpu", "arm64"]:
     ti.init(arch=ti.cpu)
 elif arch in ["cuda", "gpu"]:
-    ti.init(arch=ti.vulkan)
+    ti.init(arch=ti.gpu)
 else:
     raise ValueError("Only CPU and CUDA backends are supported for now.")
 
