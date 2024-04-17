@@ -48,9 +48,11 @@ def get_interest_points(detection_result):
 
 
 RES = None
-
+IS_OVERLAY_ON = False
 
 def main(args):
+    global IS_OVERLAY_ON
+
     camera_capture = cv2.VideoCapture(args.c)
 
     if not camera_capture.isOpened():
@@ -138,9 +140,7 @@ def main(args):
             if sim.stable_fluid.GRAVITY_COEFF <= -300:
                 sim.stable_fluid.GRAVITY_COEFF = -300
             # print(f"sim.stable_fluid.GRAVITY_COEFF = {sim.stable_fluid.GRAVITY_COEFF}")
-        cv2.putText(frame, f"Gravity: {sim.stable_fluid.GRAVITY_COEFF:.0f}",
-                    (20, 500), cv2.FONT_HERSHEY_DUPLEX,
-                    1, (255, 255, 255), 1, cv2.LINE_AA)
+        
 
         # hand shape detection
         pts = get_interest_points(detection_result)
@@ -173,10 +173,19 @@ def main(args):
 
         sim.stable_fluid.step(mouse_data)
 
-        # Set fluid sim as background
-        frame = 0.3*np.array((frame/255.0), dtype=np.float32) + sim.stable_fluid.dyes_pair.cur.to_numpy()
-
-        # draw on image
+        if IS_OVERLAY_ON:
+            # optionally, add camera frame as background
+            frame = 0.3 * np.array((frame / 255.0), dtype=np.float32) + sim.stable_fluid.dyes_pair.cur.to_numpy()
+        else:
+            # Set fluid sim as background
+            frame = sim.stable_fluid.dyes_pair.cur.to_numpy()
+        
+        
+        cv2.putText(frame, f"Gravity: {sim.stable_fluid.GRAVITY_COEFF:.0f}",
+                    (20, 500), cv2.FONT_HERSHEY_DUPLEX,
+                    1, (255, 255, 255), 1, cv2.LINE_AA)
+        
+        # draw landmarks on image
         annotated_frame = draw_landmarks_on_image(
             frame,
             detection_result
@@ -186,6 +195,11 @@ def main(args):
         annotated_frame = cv2.cvtColor(annotated_frame, cv2.COLOR_RGB2BGR)
         cv2.imshow('Gesture Recognition', annotated_frame)
 
+        # Press 'o' to toggle camera image overlay on/off
+        if cv2.waitKey(1) & 0xFF == ord('o'):
+            IS_OVERLAY_ON = not IS_OVERLAY_ON
+
+        # Press 'q' to exit
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
