@@ -31,6 +31,8 @@ The image above shows the high level architecture for our project. The user will
 #### Hard Coded Detection (TODO James)
 
 #### Data-Driven Detection (TODO Justin)
+Since we use MediaPipe to detect the interest points of the hand, we can use those interest points as the input to a neural network rather than the entire image. This allows us to focus our attention to gestures of the hand, rather than also having to find the hand from an image and then still identify a gesture. MediaPipe outputs 21 interest points identified in 3D space, (x, y, z). This gives us 63 data points to feed into our network. In order to keep inference time low, we use a relatively small model, only 3 layers deep with hidden layer size 256. We use ReLU activation functions between the layers and use SoftMax on the output. Our loss function is cross entropy and the optimizer we chose was stochastic gradient descent. 
+
 
 #### Fluid Simulation (TODO Barney)
 
@@ -39,6 +41,9 @@ The image above shows the high level architecture for our project. The user will
 ### Intuition (TODO Joseph)
 
 ### Visuals (TODO Justin)
+
+<img src="assets/images/pipelinevis.png?raw=true" alt="Methods Pipeline" width="1000"/>
+The flow chart above shows the major steps of our process, including our use of MediaPipe, neural network classification, and outputting to the simulator.
 
 ## Experiments (TODO Barney)
 ### Experiment Purpose (TODO Barney)
