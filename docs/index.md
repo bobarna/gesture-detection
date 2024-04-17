@@ -76,7 +76,7 @@ with our system.
 ### Baselines (TODO Joseph)
 ### Key Result Presentation (TODO Barney + record a video) 
 
-<video width="320" height="240" controls>
+<video width="50%" style="display: block; margin: 0 auto" controls>
   <source src="assets/videos/real-time-demo-min.mp4?raw=true" type="video/mp4">
   Your browser does not support the video tag.
 </video>
