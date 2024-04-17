@@ -20,6 +20,18 @@ import torch
 import torch.nn as nn
 from shape_detector.models.SimpleModel import SimpleModel
 
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "-c",
+    required=False,
+    default="0",
+    type=int,
+    help="Camera index for machine. We found for Mac: 1, Windows: 0 (default: 0)",
+)
+
 
 def get_interest_points(detection_result):
     # extract
@@ -38,8 +50,8 @@ def get_interest_points(detection_result):
 RES = None
 
 
-def main():
-    camera_capture = cv2.VideoCapture(1)
+def main(args):
+    camera_capture = cv2.VideoCapture(args.c)
 
     if not camera_capture.isOpened():
         print("Cannot open camera")
@@ -109,23 +121,26 @@ def main():
             for i in range(num_hands):
                 if (detection_result.handedness[i][0].index == 0):
                     left_eb = extend_or_bend(landmarks=detection_result.hand_landmarks[i])
-                    print(f"left hand shape: {left_eb}\n")
+                    # print(f"left hand shape: {left_eb}\n")
                 else:
                     right_eb = extend_or_bend(landmarks=detection_result.hand_landmarks[i])
-                    print(f"right hand shape: {right_eb}\n")
+                    # print(f"right hand shape: {right_eb}\n")
 
         only_thumb_bent = ['b', 'e', 'e', 'e', 'e']
         if left_eb == only_thumb_bent or right_eb == only_thumb_bent:
             sim.stable_fluid.GRAVITY_COEFF += 10.0
             if sim.stable_fluid.GRAVITY_COEFF >= 300:
                 sim.stable_fluid.GRAVITY_COEFF = 300
-            print(f"sim.stable_fluid.GRAVITY_COEFF = {sim.stable_fluid.GRAVITY_COEFF}")
+            # print(f"sim.stable_fluid.GRAVITY_COEFF = {sim.stable_fluid.GRAVITY_COEFF}")
         only_pinky_bent = ['e', 'e', 'e', 'e', 'b']
         if left_eb == only_pinky_bent or right_eb == only_pinky_bent:
             sim.stable_fluid.GRAVITY_COEFF -= 10.0
             if sim.stable_fluid.GRAVITY_COEFF <= -300:
                 sim.stable_fluid.GRAVITY_COEFF = -300
-            print(f"sim.stable_fluid.GRAVITY_COEFF = {sim.stable_fluid.GRAVITY_COEFF}")
+            # print(f"sim.stable_fluid.GRAVITY_COEFF = {sim.stable_fluid.GRAVITY_COEFF}")
+        cv2.putText(frame, f"Gravity: {sim.stable_fluid.GRAVITY_COEFF:.0f}",
+                    (20, 500), cv2.FONT_HERSHEY_DUPLEX,
+                    1, (255, 255, 255), 1, cv2.LINE_AA)
 
         # hand shape detection
         pts = get_interest_points(detection_result)
@@ -180,4 +195,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(parser.parse_args())
