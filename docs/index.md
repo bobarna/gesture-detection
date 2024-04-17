@@ -48,8 +48,15 @@ To our knowledge, our system is the first program designed specifically to allow
 ### Method Overview
 
 #### Recognition (TODO James)
+- MediaPipe utilizes deep neural network-based models trained on a large dataset of hand images to detect and localize the hand landmarks. The machine learning pipeline consists of several models working together:
+    - A palm detector model is used to find an oriented hand bounding box.
+    - A hand landmark model returns the 3D hand keypoints in the image region found by the palm detector model.
+    - A gesture recognizer classifies the previously obtained keypoint structure into a discrete set of gestures.
+- The output of MediaPipe contains 21 keypoints (as the following graph shows), covering the 5 fingers of a hand, and it also outputs whether the detected hand is left or right.
+<img src="assets/images/hand_landmarks.png?raw=true" alt="Hand Landmarks" width="1000"/>
 
 #### Hard Coded Detection (TODO James)
+We obtain hand gestures by detecting whether each finger is bent or extended. This work can be done by calculating the angle of each finger knuckle. We firstly get the vectors between the keypoints returned by MediaPipe, then get the cosine of the angle by calculating the dot product. After testing, we set the threshold between bend and extend to be 0.9. That is, if all the knuckles on a finger has cosine theta bigger than 0.9, then this finger is straight; while if any of the knuckles has cosine theta less than 0.9, meaning that this knuckle is bent, then the finger will be classified as bent. Detecting the shape of each finger can help us distinguish many different kinds of hand gestures.
 
 #### Data-Driven Detection (TODO Justin)
 Since we use MediaPipe to detect the interest points of the hand, we can use those interest points as the input to a neural network rather than the entire image. This allows us to focus our attention to gestures of the hand, rather than also having to find the hand from an image and then still identify a gesture. MediaPipe outputs 21 interest points identified in 3D space, (x, y, z). This gives us 63 data points to feed into our network. In order to keep inference time low, we use a relatively small model, only 3 layers deep with hidden layer size 256. We use ReLU activation functions between the layers and use SoftMax on the output. Our loss function is cross entropy and the optimizer we chose was stochastic gradient descent. 
@@ -123,8 +130,10 @@ Prior approaches to gesture detection are generally more generalizable than ours
 
 ### Key Result Performance
 ## Attempted Approaches
-# Hard Coding
-We tested a couple of different hand gestures to see if the bent-extended detection works well. Here we listed three photos to prove that the detection ends up correctly. The print out result is in this format: “right hand shape: ['e', 'e', 'b', 'b', 'e']”, where the ‘e’ represents ‘extended’, and ‘b’ represents ‘bent’, and the five values are corresponding to the thumb, the index finger, the middle finger, the ring finger, and the pinky, respectively.
+# Hard Coding: 
+We tested a couple of different hand gestures to see if the bent-extended detection works well. Here we put a photo to prove that the detection ends up correctly. The print out result is in this format: “right hand shape: ['b', 'e', 'e', 'e', 'e']”, where the ‘e’ represents ‘extended’, and ‘b’ represents ‘bent’, and the five values are corresponding to the thumb, the index finger, the middle finger, the ring finger, and the pinky, respectively.
+
+<img src="assets/images/thumb_bent.png?raw=true" alt="Thumb Bent" width="500"/>
 
 # Recognition
 To experiment with detecting shapes, we designed a neural network to detect whether the hand was open in a palm or closed in a fist. The accuracy it achieves for our dataset is 98%. Using this model with MediaPipe we can see the predictor is able to accurately track the hand and the shape it is in. We tried several variations for different aspects of the model, like size, output layer, optimizer, and loss function. We landed on the model described in the methods section because it was able to not just accurately pick the correct shape, but the softmax output also showed it chooses the correct shape with high probability. This is good for our use case because when the hand is not in a fist or a palm, the probabilities given by the model will be low and we can handle cases when the user is not showing a palm or fist. This was also a factor in how we decided what shapes were best to detect. These shapes are quite different which helps the model distinguish between them.
@@ -138,6 +147,7 @@ One approach that we attempted in the early- to middle-stages of the project wor
 
 ## Final Results
 We believe that our approach worked. In the operation of the program, we are able to consistently and accurately engage with the different functionalities of the fluid simulator with the landmarks and gesture detection protocols that we have implemented.
+
 
 ## Discussion (TODO together on Wednesday)
 ## Challenges  (TODO together on Wednesday)
