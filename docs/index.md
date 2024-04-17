@@ -91,7 +91,10 @@ with our system.
 ### Baselines (TODO Joseph)
 ### Key Result Presentation (TODO Barney + record a video) 
 
-![Real-time Gesture Detection Demo](https://github.com/bobarna/gesture-detection/blob/6f531aba9e2946b6e83f8b7853b5270d420fb6b9/docs/assets/videos/real-time-demo-min.mp4)
+<video width="320" height="240" controls>
+  <source src="assets/videos/real-time-demo-min.mp4?raw=true" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ### Key Result Performance
 
