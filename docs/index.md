@@ -131,6 +131,7 @@ Prior approaches to gesture detection are generally more generalizable than ours
 ### Key Result Performance
 #### Hard Coding: 
 We tested a couple of different hand gestures to see if the bent-extended detection works well. Here we put a photo to prove that the detection ends up correctly. The print out result is in this format: “right hand shape: ['b', 'e', 'e', 'e', 'e']”, where the ‘e’ represents ‘extended’, and ‘b’ represents ‘bent’, and the five values are corresponding to the thumb, the index finger, the middle finger, the ring finger, and the pinky, respectively.
+
 <img src="assets/images/thumb_bent.png?raw=true" alt="Thumb Bent" width="500"/>
 
 ## Discussion (TODO together on Wednesday)
