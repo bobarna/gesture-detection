@@ -135,7 +135,7 @@ Our metric for success is two fold and starts with the model's prediction accura
 
 ## Results
 ### Baselines
-Prior approaches to gesture detection are generally more generalizable than ours in terms of number of gestures they are capable of detecting - many systems exist that are specifically designed to detect a wide range of hand signs, while ours is limited to a comparatively small number, due to the relatively niche nature of our goal task. However, in gauging performance of our program, we used the inference time of our system as a success metric. We compared the time taken for hand detection and landmarking of our system and MediaPipe’s built-in gesture recognition option - in doing so, we found that our system generally performs faster for the specific task that we have set out to implement (our average inference time was 3.51 ms, while the average MediaPipe inference time was 43.6 ms). Based on these values, we assert that, despite the relative superiority of other systems in terms of the number of gestures detected, ours performs well against the MediaPipe baseline when detecting the gestures we have implemented and, subsequently, performing functions within the fluid simulator.
+While prior approaches to gesture detection have demonstrated greater generalizability by detecting a wider range of gestures, our system is tailored to a specific set of gestures due to the relatively niche nature of our task. Despite this limitation, our evaluation primarily focused on inference time as the success metric. Remarkably, our system exhibits a significant performance advantage, achieving speeds approximately <span style="color: red;"><b>12 times</b></span> faster for the targeted tasks we have implemented. Specifically, our system boasts an average inference time of <span style="color: red;">3.51 ms</span>, compared to MediaPipe’s built-in gesture recognition function, which averages <span style="color: red;">43.6 ms</span>. These results underscore the efficiency of our approach, particularly within the context of our fluid simulator, despite the broader detection capabilities of alternative systems.
 
 ### Key Result Presentation
 
@@ -192,7 +192,7 @@ Though our team worked well together, there were a couple of challenges that we 
 | Merging the code             | &#10003;           | &#10003;           | &#10003;           | &#10003;           |
 | Code cleanup                 |                    |                    | &#10003;           |                    |
 | Combining Techniques         | &#10003;           | &#10003;           | &#10003;           | &#10003;           |
-| Related Works                |                    |                    | &#10003;           |                    |
+| Related Works                |                    | &#10003;           | &#10003;           |                    |
 | Writing the report           | &#10003;           | &#10003;           | &#10003;           | &#10003;           |
 | Github Setup                 | &#10003;           |                    |                    |                    |
 | Github Page                  |                    | &#10003;           |                    | &#10003;           |
