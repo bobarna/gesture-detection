@@ -181,14 +181,15 @@ We believe that our approach worked. In the operation of the program, we are abl
 
 | Member                       | Barney Börcsök     | James Yu           | Joseph Hardin      | Justin Wit         |
 |:-----------------------------|:-------------------|:-------------------|:-------------------|:-------------------|
-| MediaPipe Setup              | ✅                 |                    |                    |                    |
-| Neural Network               |                    |                    |                    | ✅                 |
-| Finger Extend or Bend        |                    | ✅                 |                    |                    |
-| Velocity detection           | ✅                 |                    | ✅                 | ✅                 |
-| Fluid Simulation             | ✅                 |                    |                    |                    |
-| Merging the code             | ✅                 | ✅                 | ✅                 | ✅                 |
-| Combining Techniques         | ✅                 | ✅                 | ✅                 | ✅                 |
-| Related Works                |                    |                    | ✅                 |                    |
-| Writing the report           | ✅                 | ✅                 | ✅                 | ✅                 |
-| Github Setup                 | ✅                 |                    |                    |                    |
-| Github Pages Setup           |                    | ✅                 |                    | ✅                 |
+| MediaPipe Setup              | &#10003;           |                    |                    |                    |
+| Neural Network               |                    |                    |                    | &#10003;           |
+| Finger Extend or Bend        |                    | &#10003;           |                    |                    |
+| Velocity detection           | &#10003;           |                    | &#10003;           | &#10003;           |
+| Fluid Simulation             | &#10003;           |                    |                    |                    |
+| Merging the code             | &#10003;           | &#10003;           | &#10003;           | &#10003;           |
+| Combining Techniques         | &#10003;           | &#10003;           | &#10003;           | &#10003;           |
+| Related Works                |                    |                    | &#10003;           |                    |
+| Writing the report           | &#10003;           | &#10003;           | &#10003;           | &#10003;           |
+| Github Setup                 | &#10003;           |                    |                    |                    |
+| Github Page                  |                    | &#10003;           |                    | &#10003;           |
+
