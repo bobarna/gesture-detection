@@ -2,6 +2,7 @@
 import sys
 import os
 
+# Fluid simulator and landmarking imports
 import sim.stable_fluid
 import visu
 
@@ -89,20 +90,19 @@ def main(args):
             print("Can't receive frame. Exiting...")
             break
 
-        # First crack at velocity calculations for hand landmarks
-        # Velocity currently represented as (change in distance) / frame
-        current_coordinates_x, current_coordinates_y = get_coordinates()
-        velocities = None
-        if prev_coordinate_x == None and prev_coordinate_y == None:
-            prev_coordinate_x = current_coordinates_x
-            prev_coordinate_y = current_coordinates_y
-        else:
-            x1 = np.array(prev_coordinate_x)
-            y1 = np.array(prev_coordinate_y)
-            x2 = np.array(current_coordinates_x)
-            y2 = np.array(current_coordinates_y)
-            velocities = ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
-            # print(velocities)
+        # Legacy code for velocity calculation. Removed for final submission
+
+        #current_coordinates_x, current_coordinates_y = get_coordinates()
+        #velocities = None
+        #if prev_coordinate_x == None and prev_coordinate_y == None:
+        #    prev_coordinate_x = current_coordinates_x
+        #    prev_coordinate_y = current_coordinates_y
+        #else:
+        #    x1 = np.array(prev_coordinate_x)
+        #    y1 = np.array(prev_coordinate_y)
+        #    x2 = np.array(current_coordinates_x)
+        #    y2 = np.array(current_coordinates_y)
+        #    velocities = ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
 
         # Process frame
         # mirror captured frame
@@ -118,29 +118,26 @@ def main(args):
         right_eb = [''] * 5
         num_hands = len(detection_result.handedness)
         if num_hands > 0:
-            # print(f"handedness: {detection_result.handedness}")
-            # print(f"landmark: {detection_result.hand_landmarks[0][4].z}")
             for i in range(num_hands):
                 if (detection_result.handedness[i][0].index == 0):
                     left_eb = extend_or_bend(landmarks=detection_result.hand_landmarks[i])
                     print(f"left hand shape: {left_eb}\n")
                 else:
                     right_eb = extend_or_bend(landmarks=detection_result.hand_landmarks[i])
-                    # print(f"right hand shape: {right_eb}\n")
 
+        # Case where the only bent finger on either hand is the thumb
         only_thumb_bent = ['b', 'e', 'e', 'e', 'e']
         if left_eb == only_thumb_bent or right_eb == only_thumb_bent:
             sim.stable_fluid.GRAVITY_COEFF += 10.0
             if sim.stable_fluid.GRAVITY_COEFF >= 300:
                 sim.stable_fluid.GRAVITY_COEFF = 300
-            # print(f"sim.stable_fluid.GRAVITY_COEFF = {sim.stable_fluid.GRAVITY_COEFF}")
+        
+        # Case where the only bent finger on either hand is the pinky
         only_pinky_bent = ['e', 'e', 'e', 'e', 'b']
         if left_eb == only_pinky_bent or right_eb == only_pinky_bent:
             sim.stable_fluid.GRAVITY_COEFF -= 10.0
             if sim.stable_fluid.GRAVITY_COEFF <= -300:
                 sim.stable_fluid.GRAVITY_COEFF = -300
-            # print(f"sim.stable_fluid.GRAVITY_COEFF = {sim.stable_fluid.GRAVITY_COEFF}")
-        
 
         # hand shape detection
         pts = get_interest_points(detection_result)

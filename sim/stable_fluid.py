@@ -267,8 +267,6 @@ def dummy_update(x: int, y:int):
 
 
 def step(mouse_data):
-    #dummy_update(int(mouse_data[2]), int(mouse_data[3]))
-    #return
 
     advect(velocities_pair.cur, velocities_pair.cur, velocities_pair.nxt)
     advect(velocities_pair.cur, dyes_pair.cur, dyes_pair.nxt)
@@ -368,9 +366,6 @@ def main():
                 paused = not paused
             elif e.key == "d":
                 debug = not debug
-
-        # Debug divergence:
-        # print(max((abs(velocity_divs.to_numpy().reshape(-1)))))
 
         if not paused:
             mouse_data = md_gen(gui)

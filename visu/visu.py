@@ -9,12 +9,12 @@ MARGIN = 10  # pixels
 FONT_SIZE = 1
 FONT_THICKNESS = 1
 HANDEDNESS_TEXT_COLOR = (88, 205, 54) # vibrant green
-X_COORDINATES = None
-Y_COORDINATES = None
 
-
-def get_coordinates():
-    return X_COORDINATES, Y_COORDINATES
+# Legacy method/variables from first velocity implementation
+#X_COORDINATES = None
+#Y_COORDINATES = None
+#def get_coordinates():
+#    return X_COORDINATES, Y_COORDINATES
 
 
 def draw_landmarks_on_image(rgb_image, detection_result):
@@ -48,20 +48,11 @@ def draw_landmarks_on_image(rgb_image, detection_result):
         text_x = int(min(x_coordinates) * width)
         text_y = int(min(y_coordinates) * height) - MARGIN
 
-        # Update global coordinates
-        global X_COORDINATES
-        X_COORDINATES = x_coordinates
-        global Y_COORDINATES
-        Y_COORDINATES = y_coordinates
-
-        # Draw handedness (left or right hand) on the image.
-        # if handedness[0].index == 0:
-        #   category = "Left"
-        # else:
-        #   category = "Right"
-        # cv2.putText(annotated_image, category,
-        #             (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
-        #             FONT_SIZE, HANDEDNESS_TEXT_COLOR, FONT_THICKNESS, cv2.LINE_AA)
+        # Legacy update of global coordinates from velocity detection
+        #global X_COORDINATES
+        #X_COORDINATES = x_coordinates
+        #global Y_COORDINATES
+        #Y_COORDINATES = y_coordinates
 
     return annotated_image
 
@@ -97,7 +88,6 @@ def get_mouse_data_from_hand_landmarks(hand_landmarks, res):
     x_coord = np.mean(np.array([lm[1] for lm in hand_landmarks]))
     y_coord = np.mean(np.array([lm[0] for lm in hand_landmarks]))
     mxy = np.array([x_coord, y_coord], dtype=np.float32) * res
-    #print(y_coord, x_coord, mxy, res)
 
     global PREV_MOUSE, CURR_COLOR
     if PREV_MOUSE is None:
@@ -108,7 +98,6 @@ def get_mouse_data_from_hand_landmarks(hand_landmarks, res):
         mdir = mdir / (np.linalg.norm(mdir) + 1e-5)
         mouse_data[0], mouse_data[1] = mdir[0], mdir[1]
         mouse_data[2], mouse_data[3] = mxy[0], mxy[1]
-
         mouse_data[4:7] = CURR_COLOR
         PREV_MOUSE = mxy
 
