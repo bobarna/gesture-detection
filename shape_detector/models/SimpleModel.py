@@ -15,5 +15,4 @@ class SimpleModel(nn.Module):
         x = self.l2(x)
         x = F.relu(x)
         x = self.l3(x)
-        x = F.softmax(x, dim=0)
         return x
