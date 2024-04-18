@@ -145,7 +145,7 @@ def advect(vf: ti.template(), qf: ti.template(), new_qf: ti.template()):
         p = ti.Vector([i, j]) + 0.5
         p = backtrace(vf, p, dt)
         new_qf[i, j] = bilerp(qf, p) * dye_decay
-    print(dye_decay)
+    # print(dye_decay)
 
 
 @ti.kernel
