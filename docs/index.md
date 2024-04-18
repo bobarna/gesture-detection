@@ -78,8 +78,9 @@ finger can help us distinguish many different kinds of hand gestures.
 #### Data-Driven Detection (TODO Justin)
 Since we use MediaPipe to detect the interest points of the hand, we can use those interest points as the input to a neural network rather than the entire image. This allows us to focus our attention to gestures of the hand, rather than also having to find the hand from an image and then still identify a gesture. MediaPipe outputs 21 interest points identified in 3D space, (x, y, z). This gives us 63 data points to feed into our network. In order to keep inference time low, we use a relatively small model, only 3 layers deep with hidden layer size 256. We use ReLU activation functions between the layers and use SoftMax on the output. Our loss function is cross entropy and the optimizer we chose was stochastic gradient descent. 
 
+#### Fluid Simulation
 
-#### Fluid Simulation (TODO Barney)
+We implement a simple fluid simulation based on [Stable Fluids](https://pages.cs.wisc.edu/~chaol/data/cs777/stam-stable_fluids.pdf) by Jos Stam. We enjoy the parallelism and device acceleration offered by [Taichi](https://www.taichi-lang.org/), while keeping our code portable. Our 2D simulation domain is discretized on a 512x512 grid, same as the resolution we use for detecting the keypoints. For performance considerations, apart from the grid resolution, tweaking the number of jacobi iterations used in the pressure solve offers a tradeoff between quality and performance. Depending on the user's device, a lower grid resolution and/or a lower number of jacobi iterations can offer faster computation speed. Further, the gravity coefficient of the simulation can also be set by the user interactively, by bending the thumb and/or pinky fingers, while keeping the rest of the fingers extended.
 
 ### Contribution (TODO Joseph)
 We expect this approach to work better than what has been done before because the specific sequence of deep-learning informed landmarking, convolutional neural network gesture detection, and fluid simulation visualization has not been attempted in prior work. Though we use pieces of methods from pre-existing gesture detection literature, as well as the MediaPipe framework for hand landmarking, the overall system that we have designed is novel. Our project builds on top of this framework to very specifically accomplish our task of, firstly, detecting and landmarking a user’s hand in real time, and secondly, facilitate the detection of specific gestures to trigger corresponding effects in simulation. Given that MediaPipe’s base function is solely recognition of hands in frame and, with the proper options enabled, gesture detection, the functionality we add transforms our system into one no one has tried. Thus, our main contribution is this unique combination of hand gesture recognition techniques alongside user interaction components.
@@ -92,7 +93,8 @@ We expect our approach to work to solve the limitation of our related works simp
 <img src="assets/images/pipelinevis.png?raw=true" alt="Methods Pipeline" width="1000"/>
 The flow chart above shows the major steps of our process, including our use of MediaPipe, neural network classification, and outputting to the simulator.
 
-## Experiments (TODO Barney)
+## Experiments
+
 We implemented our method in 
 [Python](https://www.python.org/), 
 using [OpenCV](https://opencv.org/),
@@ -106,27 +108,31 @@ programming.
 We provide source code and instructions on running our code at
 [https://github.com/bobarna/gesture-detection](https://github.com/bobarna/gesture-detection).
 
-### Experiment Purpose (TODO Barney)
+### Experiment Purpose
+
 We grab the camera stream from the user's device, and detect interest points for
 the user's hands. Based on these, we let the user interact with a colorful fluid
 simulation in real time.
 
-### Input Description (TODO Barney)
+### Input Description
+
 Figure XX (TODO) shows that each input image is a frame of a user standing in
 front of a camera. As we decided to run our fluid simulation in pixel space,
 matching the domain's resolution to our camera image, we decided to crop our
 input image to a 512x512 resolution. We observed that this resolution offers an
 enjoyable user experience, while enabling real-time performance of our pipeline
-even on low-end devices we tested. 
+even on low-end devices we tested.
 
-### Desire Output Description (TODO Barney)
-Figure XX (TODO) shows that the output of our model is an interactive real-time
+### Desired Output Description
+
+The output of our model is an interactive real-time
 fluid simulation. We ended up experimenting with blending the fluid simulation
 with the current frame from the camera for artistic reasons, but visualizing
 only the fluid simulation with the detected keypoints also delivered a pleasant
-user experience. 
+user experience.
 
-### Metric for Success (TODO Barney)
+### Metric for Success
+
 During our qualitative analysis, our users enjoyed a real-time experience of
 interacting with the system. Even when trying extreme motions, the fluid
 simulation remained stable, even when detection quality slightly varied. We
@@ -171,7 +177,7 @@ We believe that our approach worked. In the operation of the program, we are abl
 
 <img src="assets/videos/motivation-tony-stark.gif?raw=true" alt="Motivation, Tony Stark" width="1000"/>
 
-## Contributions (TODO together on Wednesday)
+## Contributions
 
 | Member                       | Barney Börcsök     | James Yu           | Joseph Hardin      | Justin Wit         |
 |:-----------------------------|:-------------------|:-------------------|:-------------------|:-------------------|
@@ -185,4 +191,4 @@ We believe that our approach worked. In the operation of the program, we are abl
 | Related Works                |                    |                    | ✅                 |                    |
 | Writing the report           | ✅                 | ✅                 | ✅                 | ✅                 |
 | Github Setup                 | ✅                 |                    |                    |                    |
-| Github Page                  |                    | ✅                 |                    | ✅                 |
+| Github Pages Setup           |                    | ✅                 |                    | ✅                 |
