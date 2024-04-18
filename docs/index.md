@@ -1,6 +1,6 @@
 # Hand Gesture Detection
 
-## Introduction (TODO Justin)
+## Introduction
 
 <video width="50%" style="display: block; margin: 0 auto" controls>
   <source src="assets/videos/real-time-demo-min.mp4?raw=true" type="video/mp4">
@@ -24,7 +24,7 @@ This is the issue our project aims to address; how can we help computers underst
 
 The image above shows the high level architecture for our project. The user will provide a hand gesture as input to our model. This model is where the bulk of our work lies and involves detecting, interpreting, and describing the input in a way the simulator can understand. We will then feed the output of our model to control some movement in a simulator. 
 
-## Related Work (TODO Joseph)
+## Related Work 
 ### Explaining Context
 [1] M. Oudah, A. Al-Naji, and J. Chahl, "Hand Gesture Recognition Based on Computer Vision: A Review of Techniques", Journal of Imaging, vol. 6,  no. 8, p. 73, July 2020
 - [Hand Gesture Recognition Based on Computer Vision: A Review of Techniques](https://www.mdpi.com/2313-433X/6/8/73)
@@ -54,7 +54,7 @@ To our knowledge, our system is the first program designed specifically to allow
 ### Method Overview
 We will now cover the components of our current best approach. This can be divided into four sequential segments, listed below: the recognition of hand gestures via MediaPipe, the hard coded values by which we rapidly identify finger position based on joint angles, the neural network-based approach for gesture identification, and the connection to the system's interactive element, the fluid simulator.
 
-#### Recognition (TODO James)
+#### Recognition
 We use MediaPipe's deep neural network-based models to detect and localize hand
 landmarks. The machine learning pipeline consists of several models working
 together:
@@ -68,7 +68,7 @@ is left or right.
 <img src="assets/images/hand_landmarks.png?raw=true" alt="Hand Landmarks" width="1000"/>
 <center><em>Figure 3</em></center>
 
-#### Hard Coded Detection (TODO James)
+#### Hard Coded Detection
 We obtain hand gestures by detecting whether each finger is bent or extended.
 This can be done by calculating the angle of each finger knuckle. First, we
 get the vectors between the keypoints returned by MediaPipe, then get
@@ -79,19 +79,19 @@ if any of the knuckles have cosine theta less than 0.9, meaning that this knuckl
 is bent, then the finger will be classified as bent. Detecting the shape of each
 finger can help us distinguish many different kinds of hand gestures.
 
-#### Data-Driven Detection (TODO Justin)
+#### Data-Driven Detection
 Since we use MediaPipe to detect the interest points of the hand, we can use those interest points as the input to a neural network rather than the entire image. This allows us to focus our attention to gestures of the hand, rather than also having to find the hand from an image and then still identify a gesture. MediaPipe outputs 21 interest points identified in 3D space, (x, y, z). This gives us 63 data points to feed into our network. In order to keep inference time low, we use a relatively small model, only 3 layers deep with hidden layer size 256. We use ReLU activation functions between the layers. Our loss function is cross entropy and the optimizer we chose was Adam. 
 
 #### Fluid Simulation
 We implement a simple fluid simulation based on [Stable Fluids](https://pages.cs.wisc.edu/~chaol/data/cs777/stam-stable_fluids.pdf) by Jos Stam. We enjoy the parallelism and device acceleration offered by [Taichi](https://www.taichi-lang.org/), while keeping our code portable. Our 2D simulation domain is discretized on a 512x512 grid, same as the resolution we use for detecting the keypoints. For performance considerations, apart from the grid resolution, tweaking the number of jacobi iterations used in the pressure solve offers a tradeoff between quality and performance. Depending on the user's device, a lower grid resolution and/or a lower number of jacobi iterations can offer faster computation speed. Further, the gravity coefficient of the simulation can also be set by the user interactively, by bending the thumb and/or pinky fingers, while keeping the rest of the fingers extended.
 
-### Contribution (TODO Joseph)
+### Contribution
 We expect this approach to work better than what has been done before because the specific approach of deep-learning informed landmarking, neural network gesture detection, and fluid simulation visualization has not been attempted in prior work in a way that focuses on accessibility and speed for average users. Though we use pieces of methods from pre-existing gesture detection literature, as well as the MediaPipe framework for hand landmarking, the way we have approached the problem is, on the whole, unique from other preexisting approaches. Our project builds on top of these preexisting frameworks to very accomplish our task of, firstly, detecting and landmarking a user’s hand in real time, and secondly, facilitate the detection of specific gestures to trigger corresponding effects in simulation in real time in an accessible manner. Given that MediaPipe’s base function is recognition of hands in frame and gesture detection (with the proper settings), the methodology we use and the functionality we add focusing on accessibility and speed makes our approach the most optimal for a user-friendly gesture detection experience. Thus, our main contribution is this unique combination of hand gesture recognition techniques alongside optimized user interaction components for local system use.
 
-### Intuition (TODO Joseph)
+### Intuition
 We expect our approach to work to solve the limitation of our related works simply because it has been designed to do so, to most optimally solve the task at hand with quick inferences and operations, as well as enable maximum ease of access for system users. This system has been incrementally designed with multiple layers to solve the required independent sub-tasks, and we ensured that each layer worked prior to implementing the next. When it came to detecting and landmarking the hands of the user, we imported the MediaPipe framework and ensured that it could be run locally and accurately display the 21 landmarks prior to implementing further functionality. We similarly implemented our neural network, gesture detection, and simulation layers, testing incrementally and ensuring the features worked prior to carrying on to the next. This process ensured that these layers were assembled to effectively solve the limitation of the prior work, to have a deep-learning, neural network-informed model with built-in, optimized user interaction.
 
-### Visuals (TODO Justin)
+### Visuals
 
 <img src="assets/images/pipelinevis.png?raw=true" alt="Methods Pipeline" width="1000"/>
 <center><em>Figure 4</em></center>
@@ -134,10 +134,10 @@ user experience.
 Our metric for success is two fold and starts with the model's prediction accuracy and loss. Having a high accuracy and low loss is important since we want to be confident in the shapes we are detecting. But our end goal isn't just a good classifier of hand gestures, we want success in using the gestures in a simulator. Metrics like ease of use, robustness, and system lag will show how effective our solution is for communicating motion. During our qualitative analysis, our users enjoyed a real-time experience of interacting with the system. Even when trying extreme motions, the fluid simulation remained stable, even when detection quality slightly varied. Please see the video below for a recording of a user interacting with our system.
 
 ## Results
-### Baselines (TODO Joseph)
+### Baselines
 Prior approaches to gesture detection are generally more generalizable than ours in terms of number of gestures they are capable of detecting - many systems exist that are specifically designed to detect a wide range of hand signs, while ours is limited to a comparatively small number, due to the relatively niche nature of our goal task. However, in gauging performance of our program, we used the inference time of our system as a success metric. We compared the time taken for hand detection and landmarking of our system and MediaPipe’s built-in gesture recognition option - in doing so, we found that our system generally performs faster for the specific task that we have set out to implement (our average inference time was 3.51 ms, while the average MediaPipe inference time was 43.6 ms). Based on these values, we assert that, despite the relative superiority of other systems in terms of the number of gestures detected, ours performs well against the MediaPipe baseline when detecting the gestures we have implemented and, subsequently, performing functions within the fluid simulator.
 
-### Key Result Presentation (TODO Barney + record a video) 
+### Key Result Presentation
 
 <video width="50%" style="display: block; margin: 0 auto" controls>
   <source src="assets/videos/real-time-demo-min.mp4?raw=true" type="video/mp4">
@@ -169,11 +169,11 @@ One approach that we attempted in the early- to middle-stages of the project wor
 #### Final Results
 We believe that our approach worked. In the operation of the program, we are able to consistently and accurately engage with the different functionalities of the fluid simulator with the landmarks and gesture detection protocols that we have implemented.
 
-## Discussion (TODO together on Wednesday)
+## Discussion
 To begin with our accomplishments, we all were able to meet the goal we set at the beginning of this project of creating an easily accessible system in which a user could utilize hand gestures to interact with a virtual element, which we implemented in the form of the fluid simulator.
 Additionally, this project opened all of our eyes to the wide array of tasks related to human-machine interaction in the field of computer vision. These motions that feel simple and intuitive to us are, by contrast, incredibly difficult for a computer to understand, and it is correspondingly challenging to describe these gestures in a useful way to a computer. We were also able to learn more about some of the concepts that we had been exposed to in lecture through the construction of our system, such as feature detection, the usage of neural networks, and more. Furthermore, we were all able to practice more logistical factors of the project, such as version control with Github, maintaining regular communication to meet self-imposed deadlines, and task delegation. Much remains to be done for future work. Through the approach that we implemented for this assignment, we were able to introduce the concept of making a priority out of accessibility and speed for gesture detection systems - however, there are likely ways that a system such as ours could be further optimized for quick operation and ease of access, along with incorporating a wider variety of recognizable gestures, to create a more functionally robust and user-friendly application. There is a long way to go for a system like ours to be as robust as Tony Stark's holograms (see below).
 
-## Challenges  (TODO together on Wednesday)
+## Challenges
 Though our team worked well together, there were a couple of challenges that we ran into as we developed our project. One such challenge was identifying which gestures we wanted to describe to the computer. Though our initial vision for the project was to implement a wide variety of gestures (or even a sequence of gestures for continuous motion), we quickly realized that this scope of work was likely too complex to achieve the inference speed we wanted to attain. Thus, we had to settle for the neural network detection of the 'fist' and 'palm' gestures. Though these gestures were enough for our purposes, and conducive to the factors of speed and accessibility that we were aiming for, further work to improve functionality to allow a system like ours to detect these complex gestures while preserving the inference speed and ease of use would be very beneficial for an even more immersive gesture-based interaction experience. In the same vein, we could have benefitted from locking down an appropriate scope of work earlier in the lifespan of the project. We had several great ideas for what we wanted the final project to look like and the features we wanted to implement. However, it would have taken much longer than one semester to appropriately and optimally implement all of these ideas into one program, and we thus may have benefitted from focusing our efforts even sooner than we did. If we were to start over today, a different strategy we could take to make progress on our overall problem statement would be to mitigate these two factors - quickly identifying which gestures would be most appropriate to enact for our purposes as soon as we could, and clearly laying out a feasible scope of work to identify our starting point, checkpoints, and stopping points from the beginning.
 
 
