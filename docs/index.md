@@ -5,14 +5,14 @@
 <img src="assets/videos/motivation-tony-stark.gif?raw=true" alt="Motivation, Tony Stark" width="1000"/>
 
 ### High Level Description and Motivation
-People have a unique ability to have conversations with each other without ever saying a word. Hand gestures are regularly used as quick nonverbal forms of communication to convey things like “good job” with a thumbs up, or “hello” with a wave. Moreover, we are able to have much more meaningful hand gestures as well. Think of an airplane or a cargo ship being directed by a person on the ground. With just a few hand motions, the person directing can communicate with the driver how to steer this giant vehicle exactly where it needs to be. Sometimes words are not the right tool for communicating something, especially when it comes to motion. 
+People have a unique ability to have conversations with each other without ever saying a word. Hand gestures are regularly used as quick nonverbal forms of communication to convey things like “good job” with a thumbs up, or “hello” with a wave. Moreover, there are hand gestures in use for critical systems. Think of an airplane or a cargo ship being directed by a person on the ground. With just a few hand motions, the person directing can communicate with the driver how to steer this giant vehicle exactly where it needs to be. Sometimes words are not the right tool for communicating something, especially when it comes to motion. 
 
 <img src="assets/images/aircraft.png?raw=true" alt="Aircraft Director" width="1000"/>
 
 For example, the person directing the aircraft would have difficulty describing with words to the pilot how to move the plane. Although it is possible, it is much easier to use hand motion to explain how the plane should move, and the results will be much better. Communicating motion to our computers can have similar benefits for how we interact with them, however, computers are much less capable of understanding what we mean by our motion. 
 
 ### Specific Problem Definition
-This is the issue our project aims to address; how can we help computers understand what we mean with our hand gestures. We are developing a system that can take hand gestures and convey the meaning of that motion to the computer. This involves detecting different hand shapes and tracking the movement of those hand shapes. This type of human-machine interaction will allow motions to be described to a computer in a natural and precise way. There are many applications for this, but for our project we are trying to control the physics of a simulator. So by taking in inputs given by hand gestures, we want to be able to apply motion to the simulator. This requires real time detection and interpretation of motion to allow the user to interact with the system in a way that communicating by other modes cannot achieve. 
+This is the issue our project aims to address; how can we help computers understand what we mean with our hand gestures. We are developing a system that can take hand gestures and convey the meaning of that motion to the computer. This involves detecting different hand shapes and tracking the movement of those hand shapes. This type of human-machine interaction will allow motions to be described to a computer in a natural and precise way. There are many applications for this, but for our project we are trying to control a physics-based simulation. By taking inputs in the form of hand gestures, we want to apply motion to this simulator. This requires real time detection and interpretation of motion to allow the user to interact with the system in a way that communicating by other modes cannot achieve. 
 
 ### Visuals
 <img src="assets/images/intro_vis.png?raw=true" alt="Method Project Outline" width="1000"/>
@@ -20,7 +20,7 @@ This is the issue our project aims to address; how can we help computers underst
 The image above shows the high level architecture for our project. The user will provide a hand gesture as input to our model. This model is where the bulk of our work lies and involves detecting, interpreting, and describing the input in a way the simulator can understand. We will then feed the output of our model to control some movement in a simulator. 
 
 ## Related Work (TODO Joseph)
-# Explaining Context
+### Explaining Context
 [1] M. Oudah, A. Al-Naji, and J. Chahl, "Hand Gesture Recognition Based on Computer Vision: A Review of Techniques", Journal of Imaging, vol. 6,  no. 8, p. 73, July 2020
 - [Hand Gesture Recognition Based on Computer Vision: A Review of Techniques](https://www.mdpi.com/2313-433X/6/8/73){:target="_blank"}
 - This work covers a variety of contributions to the field of gesture detection from prior literature, including using instrumented gloves and haptic technology with physical connection to a computer, gesture detection via computer vision techniques (spanning color-, appearance-, motion-, skeleton-, depth-, and 3D model based approaches), deep learning for gesture detection, and several applications of these techniques. Each of these approaches are described at a high level, including core concepts, challenges, effectiveness, and more. Several other works are cited in the description of each of these methods through a summarization of knowledge approach. The paper also identifies a ‘research gap’ in the field, wherein researchers are putting effort into gesture recognition in a virtual environment as opposed to practical applications such as healthcare, and challenges for ongoing gesture recognition research/projects. This work is relevant to our project because it set the foundation for the options we had to work with to solve our desired problem, and guided us towards a methodology involving deep neural networks and convolutional neural networks, approaches that are both touched on in the paper.
@@ -39,9 +39,9 @@ The image above shows the high level architecture for our project. The user will
 
 [5] C. Lugaresi et al., "Mediapipe: A framework for building perception pipelines", Google Research, 2019.
 - [Mediapipe: A framework for building perception pipelines](https://arxiv.org/pdf/1906.08172.pdf){:target="_blank"}
-- This article summarizes the contributions of MediaPipe, a Python tool which employs a deep neural network-based model trained on a large dataset of hand images to detect and localize landmarks on one's hand, in a high-level way. MediaPipe incorporates additional processing steps and inference models to improve perception technology. This task can be difficult because of excessive coupling between steps - however, MediaPipe these challenges by abstracting and connecting individual perception models into maintainable pipelines. This work relates to our project by providing us the framework to build upon for the additional features of our project, including our own gesture recognition and user interaction components. The landmarking provided by MediaPipe became an essential part of our system.
+- MediaPipe is an on-device Machine Learning solution from Google. For gesture detection, it employs a deep neural network-based model to detect and localize landmarks on one's hand. MediaPipe incorporates additional processing steps in the background to deliver state-of-the-art results. MediaPipe contributes to the field by providing an extendable and maintainable pipeline for developers to build on. We incorporate MediaPipe into our gesture recognition pipeline for detecting hand landmarks in image space, making it an essential part of our system.
 
-# Our Project in Context
+## Our Project in Context
 To our knowledge, our system is the first program designed specifically to allow a user to run real-time gesture detection informed by both a deep neural network for hand-based landmarking and a convolutional neural network for gesture detection on their personal device with an attached simulation element influenced by the gesture detected. Though this problem is specific, this application of gesture recognition was absent in prior literature, and our approach resultantly fills that hole. Our work also places an emphasis on speed of inference over other factors, such as number of recognized gestures, an approach starkly different from other gesture recognition approaches. Thirdly, we emphasized usability and interaction by the user. Though gesture recognition is an important component of our system, we aimed to also visualize an application of these techniques to anyone interacting with the program through the implementation of a fluid simulator. Given that prior literature was largely focused on covering hand gesture approaches at a high level, we assert that this is another open niche which our project fills.
 
 ## Our Method
@@ -49,15 +49,28 @@ To our knowledge, our system is the first program designed specifically to allow
 ### Method Overview
 
 #### Recognition (TODO James)
-- MediaPipe utilizes deep neural network-based models trained on a large dataset of hand images to detect and localize the hand landmarks. The machine learning pipeline consists of several models working together:
-    - A palm detector model is used to find an oriented hand bounding box.
-    - A hand landmark model returns the 3D hand keypoints in the image region found by the palm detector model.
-    - A gesture recognizer classifies the previously obtained keypoint structure into a discrete set of gestures.
-- The output of MediaPipe contains 21 keypoints (as the following graph shows), covering the 5 fingers of a hand, and it also outputs whether the detected hand is left or right.
+We use MediaPipe's deep neural network-based models to detect and localize hand
+landmarks. The machine learning pipeline consists of several models working
+together:
+  - A palm detector model is used to find an oriented hand bounding box.
+  - A hand landmark model returns the 3D hand keypoints in the image region found by the palm detector model.
+
+The output of MediaPipe contains 21 keypoints (as the following graph shows),
+covering the 5 fingers of a hand, and it also outputs whether the detected hand
+is left or right.
+
 <img src="assets/images/hand_landmarks.png?raw=true" alt="Hand Landmarks" width="1000"/>
 
 #### Hard Coded Detection (TODO James)
-We obtain hand gestures by detecting whether each finger is bent or extended. This work can be done by calculating the angle of each finger knuckle. We firstly get the vectors between the keypoints returned by MediaPipe, then get the cosine of the angle by calculating the dot product. After testing, we set the threshold between bend and extend to be 0.9. That is, if all the knuckles on a finger has cosine theta bigger than 0.9, then this finger is straight; while if any of the knuckles has cosine theta less than 0.9, meaning that this knuckle is bent, then the finger will be classified as bent. Detecting the shape of each finger can help us distinguish many different kinds of hand gestures.
+We obtain hand gestures by detecting whether each finger is bent or extended.
+This can be done by calculating the angle of each finger knuckle. First, we
+get the vectors between the keypoints returned by MediaPipe, then get
+the cosine of the angle by calculating the dot product. After testing, we set
+the threshold between bend and extend to be 0.9. That is, if all the knuckles on
+a finger has cosine theta bigger than 0.9, then this finger is straight; while
+if any of the knuckles have cosine theta less than 0.9, meaning that this knuckle
+is bent, then the finger will be classified as bent. Detecting the shape of each
+finger can help us distinguish many different kinds of hand gestures.
 
 #### Data-Driven Detection (TODO Justin)
 Since we use MediaPipe to detect the interest points of the hand, we can use those interest points as the input to a neural network rather than the entire image. This allows us to focus our attention to gestures of the hand, rather than also having to find the hand from an image and then still identify a gesture. MediaPipe outputs 21 interest points identified in 3D space, (x, y, z). This gives us 63 data points to feed into our network. In order to keep inference time low, we use a relatively small model, only 3 layers deep with hidden layer size 256. We use ReLU activation functions between the layers and use SoftMax on the output. Our loss function is cross entropy and the optimizer we chose was stochastic gradient descent. 
