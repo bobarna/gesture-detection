@@ -173,22 +173,15 @@ We believe that our approach worked. In the operation of the program, we are abl
 
 ## Contributions (TODO together on Wednesday)
 
-| Member                       | Barnabas Borcsok   | James Yu           | Joseph Hardin      | Justin Wit         |
+| Member                       | Barney Börcsök     | James Yu           | Joseph Hardin      | Justin Wit         |
 |:-----------------------------|:-------------------|:-------------------|:-------------------|:-------------------|
-| Interest Points Detection    | :white_check_mark: |                    |                    |                    |
-| MediaPipe Setup              | :white_check_mark: |                    |                    |                    |
-| Neural Network               |                    |                    |                    | :white_check_mark: |
-| Finger Extend or Bend        |                    | :white_check_mark: |                    |                    |
-| Velocity Detection           |                    |                    | :white_check_mark: |                    |
-| Introduction                 | :white_check_mark: | :white_check_mark: |                    | :white_check_mark: |
-| Related Works                |                    | :white_check_mark: | :white_check_mark: |                    |
-| Methods                      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| Experiments                  |                    | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| What's Next                  |                    |                    |                    | :white_check_mark: |
-| Github Setup                 | :white_check_mark: |                    |                    |                    |
-| Github Page                  |                    | :white_check_mark: |                    | :white_check_mark: |
-| Detection Model              | :white_check_mark: | :white_check_mark: |                    |                    |
-| Hand Velocity                |                    |                    | :white_check_mark: | :white_check_mark: |
-| Combining Techniques         | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| Application                  | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-
+| MediaPipe Setup              | ✅                 |                    |                    |                    |
+| Neural Network               |                    |                    |                    | ✅                 |
+| Finger Extend or Bend        |                    | ✅                 |                    |                    |
+| Velocity detection           | ✅                 |                    | ✅                 | ✅                 |
+| Fluid Simulation             | ✅                 |                    |                    |                    |
+| Merging the code             | ✅                 | ✅                 | ✅                 | ✅                 |
+| Combining Techniques         | ✅                 | ✅                 | ✅                 | ✅                 |
+| Writing the report           | ✅                 | ✅                 | ✅                 | ✅                 |
+| Github Setup                 | ✅                 |                    |                    |                    |
+| Github Page                  |                    | ✅                 |                    | ✅                 |
