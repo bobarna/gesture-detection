@@ -60,6 +60,12 @@ You must input arguements to the command line as follows
 
 If you want to add a new shape to detect you must create a new directory in the data folder first. You must use the following naming convention '#-shape' Where # is the label number for the shape (must be unique) and shape is the shape name.
 
+## Running the Code
+Run the main.py file from the directory it is in. There is one command line arguement (-c) for the camera index. We found on Mac the index is 1, and on Windows the index is 0.
+```
+$ python main.py -c 0
+```
+
 ## Used resources
 - OpenCV Documentation's "Getting Started with Videos": https://docs.opencv.org/4.x/dd/d43/tutorial_py_video_display.html
 - MediaPipe official demo: https://github.com/googlesamples/mediapipe/blob/main/examples/hand_landmarker/python/hand_landmarker.ipynb
