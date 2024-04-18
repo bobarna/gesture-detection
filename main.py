@@ -123,7 +123,7 @@ def main(args):
             for i in range(num_hands):
                 if (detection_result.handedness[i][0].index == 0):
                     left_eb = extend_or_bend(landmarks=detection_result.hand_landmarks[i])
-                    # print(f"left hand shape: {left_eb}\n")
+                    print(f"left hand shape: {left_eb}\n")
                 else:
                     right_eb = extend_or_bend(landmarks=detection_result.hand_landmarks[i])
                     # print(f"right hand shape: {right_eb}\n")
