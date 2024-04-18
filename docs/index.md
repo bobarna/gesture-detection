@@ -173,22 +173,22 @@ We believe that our approach worked. In the operation of the program, we are abl
 
 ## Contributions (TODO together on Wednesday)
 
-| Member                       | Barnabas Borcsok | James Yu | Joseph Hardin | Justin Wit |
-|:-----------------------------|:-----------------|:---------|:--------------|:-----------|
-| Interest Points Detection    | V                |          |               |            |
-| MediaPipe Setup              | V                |          |               |            |
-| Neural Network               |                  |          |               | V          |
-| Finger Extend or Bend        |                  | V        |               |            |
-| Velocity Detection           |                  |          | V             |            |
-| Introduction                 | V                | V        |               | V          |
-| Related Works                |                  | V        | V             |            |
-| Methods                      | V                | V        | V             | V          |
-| Experiments                  |                  | V        | V             | V          |
-| What's Next                  |                  |          |               | V          |
-| Github Setup                 | V                |          |               |            |
-| Github Page                  |                  | V        |               | V          |
-| Detection Model              | V                | V        |               |            |
-| Hand Velocity                |                  |          | V             | V          |
-| Combining Techniques         | V                | V        | V             | V          |
-| Application                  | V                | V        | V             | V          |
+| Member                       | Barnabas Borcsok   | James Yu           | Joseph Hardin      | Justin Wit         |
+|:-----------------------------|:-------------------|:-------------------|:-------------------|:-------------------|
+| Interest Points Detection    | :white_check_mark: |                    |                    |                    |
+| MediaPipe Setup              | :white_check_mark: |                    |                    |                    |
+| Neural Network               |                    |                    |                    | :white_check_mark: |
+| Finger Extend or Bend        |                    | :white_check_mark: |                    |                    |
+| Velocity Detection           |                    |                    | :white_check_mark: |                    |
+| Introduction                 | :white_check_mark: | :white_check_mark: |                    | :white_check_mark: |
+| Related Works                |                    | :white_check_mark: | :white_check_mark: |                    |
+| Methods                      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Experiments                  |                    | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| What's Next                  |                    |                    |                    | :white_check_mark: |
+| Github Setup                 | :white_check_mark: |                    |                    |                    |
+| Github Page                  |                    | :white_check_mark: |                    | :white_check_mark: |
+| Detection Model              | :white_check_mark: | :white_check_mark: |                    |                    |
+| Hand Velocity                |                    |                    | :white_check_mark: | :white_check_mark: |
+| Combining Techniques         | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Application                  | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
