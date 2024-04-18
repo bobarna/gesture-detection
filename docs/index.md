@@ -11,6 +11,7 @@
 People have a unique ability to have conversations with each other without ever saying a word. Hand gestures are regularly used as quick nonverbal forms of communication to convey things like “good job” with a thumbs up, or “hello” with a wave. Moreover, there are hand gestures in use for critical systems. Think of an airplane or a cargo ship being directed by a person on the ground. With just a few hand motions, the person directing can communicate with the driver how to steer this giant vehicle exactly where it needs to be. Sometimes words are not the right tool for communicating something, especially when it comes to motion. 
 
 <img src="assets/images/aircraft.png?raw=true" alt="Aircraft Director" width="1000"/>
+<center><em>Figure 1</em></center>
 
 For example, the person directing the aircraft would have difficulty describing with words to the pilot how to move the plane. Although it is possible, it is much easier to use hand motion to explain how the plane should move, and the results will be much better. Communicating motion to our computers can have similar benefits for how we interact with them, however, computers are much less capable of understanding what we mean by our motion. 
 
@@ -19,6 +20,7 @@ This is the issue our project aims to address; how can we help computers underst
 
 ### Visuals
 <img src="assets/images/intro_vis.png?raw=true" alt="Method Project Outline" width="1000"/>
+<center><em>Figure 2</em></center>
 
 The image above shows the high level architecture for our project. The user will provide a hand gesture as input to our model. This model is where the bulk of our work lies and involves detecting, interpreting, and describing the input in a way the simulator can understand. We will then feed the output of our model to control some movement in a simulator. 
 
@@ -64,6 +66,7 @@ covering the 5 fingers of a hand, and it also outputs whether the detected hand
 is left or right.
 
 <img src="assets/images/hand_landmarks.png?raw=true" alt="Hand Landmarks" width="1000"/>
+<center><em>Figure 3</em></center>
 
 #### Hard Coded Detection (TODO James)
 We obtain hand gestures by detecting whether each finger is bent or extended.
@@ -77,7 +80,7 @@ is bent, then the finger will be classified as bent. Detecting the shape of each
 finger can help us distinguish many different kinds of hand gestures.
 
 #### Data-Driven Detection (TODO Justin)
-Since we use MediaPipe to detect the interest points of the hand, we can use those interest points as the input to a neural network rather than the entire image. This allows us to focus our attention to gestures of the hand, rather than also having to find the hand from an image and then still identify a gesture. MediaPipe outputs 21 interest points identified in 3D space, (x, y, z). This gives us 63 data points to feed into our network. In order to keep inference time low, we use a relatively small model, only 3 layers deep with hidden layer size 256. We use ReLU activation functions between the layers and use SoftMax on the output. Our loss function is cross entropy and the optimizer we chose was stochastic gradient descent. 
+Since we use MediaPipe to detect the interest points of the hand, we can use those interest points as the input to a neural network rather than the entire image. This allows us to focus our attention to gestures of the hand, rather than also having to find the hand from an image and then still identify a gesture. MediaPipe outputs 21 interest points identified in 3D space, (x, y, z). This gives us 63 data points to feed into our network. In order to keep inference time low, we use a relatively small model, only 3 layers deep with hidden layer size 256. We use ReLU activation functions between the layers. Our loss function is cross entropy and the optimizer we chose was Adam. 
 
 #### Fluid Simulation
 We implement a simple fluid simulation based on [Stable Fluids](https://pages.cs.wisc.edu/~chaol/data/cs777/stam-stable_fluids.pdf) by Jos Stam. We enjoy the parallelism and device acceleration offered by [Taichi](https://www.taichi-lang.org/), while keeping our code portable. Our 2D simulation domain is discretized on a 512x512 grid, same as the resolution we use for detecting the keypoints. For performance considerations, apart from the grid resolution, tweaking the number of jacobi iterations used in the pressure solve offers a tradeoff between quality and performance. Depending on the user's device, a lower grid resolution and/or a lower number of jacobi iterations can offer faster computation speed. Further, the gravity coefficient of the simulation can also be set by the user interactively, by bending the thumb and/or pinky fingers, while keeping the rest of the fingers extended.
@@ -91,6 +94,7 @@ We expect our approach to work to solve the limitation of our related works simp
 ### Visuals (TODO Justin)
 
 <img src="assets/images/pipelinevis.png?raw=true" alt="Methods Pipeline" width="1000"/>
+<center><em>Figure 4</em></center>
 The flow chart above shows the major steps of our process, including our use of MediaPipe, neural network classification, and outputting to the simulator.
 
 ## Experiments
@@ -113,12 +117,11 @@ the user's hands. Based on these, we let the user interact with a colorful fluid
 simulation in real time.
 
 ### Input Description
-Figure XX (TODO) shows that each input image is a frame of a user standing in
-front of a camera. As we decided to run our fluid simulation in pixel space,
-matching the domain's resolution to our camera image, we decided to crop our
-input image to a 512x512 resolution. We observed that this resolution offers an
-enjoyable user experience, while enabling real-time performance of our pipeline
-even on low-end devices we tested.
+
+<img src="assets/images/input.jpg?raw=true" alt="Input" width="1000"/>
+<center><em>Figure 5</em></center>
+
+Figure 5 shows that each input image is a frame of a user standing in front of a camera. But this isn't the input to our neural network, nor is it the input to our simulation. We use the landmarks identified by MediaPipe as the input to our network to identify shape. This means we had to collect our own dataset of landmarks for the shapes we wanted to detect. We used 1000 sets of landmarks for each shape to train our network. We then use the output of our network in combination with our velocity calculations and individual finger geometry calculations as our input to the simulator.
 
 ### Desired Output Description
 The output of our model is an interactive real-time
@@ -128,16 +131,11 @@ only the fluid simulation with the detected keypoints also delivered a pleasant
 user experience.
 
 ### Metric for Success
-During our qualitative analysis, our users enjoyed a real-time experience of
-interacting with the system. Even when trying extreme motions, the fluid
-simulation remained stable, even when detection quality slightly varied. We
-observe that a perfect detection was not necessary for a good user experience
-and end result. Please see the video below for a recording of a user interacting
-with our system.
+Our metric for success is two fold and starts with the model's prediction accuracy and loss. Having a high accuracy and low loss is important since we want to be confident in the shapes we are detecting. But our end goal isn't just a good classifier of hand gestures, we want success in using the gestures in a simulator. Metrics like ease of use, robustness, and system lag will show how effective our solution is for communicating motion. During our qualitative analysis, our users enjoyed a real-time experience of interacting with the system. Even when trying extreme motions, the fluid simulation remained stable, even when detection quality slightly varied. Please see the video below for a recording of a user interacting with our system.
 
 ## Results
 ### Baselines (TODO Joseph)
-Prior approaches to gesture detection are generally more generalizable than ours in terms of number of gestures they are capable of detecting - many systems exist that are specifically designed to detect a wide range of hand signs, while ours is limited to a comparatively small number, due to the relatively niche nature of our goal task. However, in gauging performance of our program, we used the inference time of our system as a success metric. We compared the time taken for hand detection and landmarking of our system and MediaPipe’s built-in gesture recognition option - in doing so, we found that our system generally performs faster for the specific task that we have set out to implement (our average inference time was [INSERT TIME HERE], while the average MediaPipe inference time was [INSERT TIME HERE]). Based on these values, we assert that, despite the relative superiority of other systems in terms of the number of gestures detected, ours performs well against the MediaPipe baseline when detecting the gestures we have implemented and, subsequently, performing functions within the fluid simulator.
+Prior approaches to gesture detection are generally more generalizable than ours in terms of number of gestures they are capable of detecting - many systems exist that are specifically designed to detect a wide range of hand signs, while ours is limited to a comparatively small number, due to the relatively niche nature of our goal task. However, in gauging performance of our program, we used the inference time of our system as a success metric. We compared the time taken for hand detection and landmarking of our system and MediaPipe’s built-in gesture recognition option - in doing so, we found that our system generally performs faster for the specific task that we have set out to implement (our average inference time was 3.51 ms, while the average MediaPipe inference time was 43.6 ms). Based on these values, we assert that, despite the relative superiority of other systems in terms of the number of gestures detected, ours performs well against the MediaPipe baseline when detecting the gestures we have implemented and, subsequently, performing functions within the fluid simulator.
 
 ### Key Result Presentation (TODO Barney + record a video) 
 
@@ -151,14 +149,19 @@ Prior approaches to gesture detection are generally more generalizable than ours
 ##### Hard Coding 
 We tested a couple of different hand gestures to see if the bent-extended detection works well. Here we put a photo to prove that the detection ends up correctly. The print out result is in this format: “right hand shape: ['b', 'e', 'e', 'e', 'e']”, where the ‘e’ represents ‘extended’, and ‘b’ represents ‘bent’, and the five values are corresponding to the thumb, the index finger, the middle finger, the ring finger, and the pinky, respectively.
 
-<img src="assets/images/thumb_bent.png?raw=true" alt="Thumb Bent" width="500"/>
+<img src="assets/images/thumb_bent.png?raw=true" alt="Thumb Bent" width="1000"/>
+<center><em>Figure 6</em></center>
 
 ##### Recognition
-To experiment with detecting shapes, we designed a neural network to detect whether the hand was open in a palm or closed in a fist. The accuracy it achieves for our dataset is 98%. Using this model with MediaPipe we can see the predictor is able to accurately track the hand and the shape it is in. We tried several variations for different aspects of the model, like size, output layer, optimizer, and loss function. We landed on the model described in the methods section because it was able to not just accurately pick the correct shape, but the softmax output also showed it chooses the correct shape with high probability. This is good for our use case because when the hand is not in a fist or a palm, the probabilities given by the model will be low and we can handle cases when the user is not showing a palm or fist. This was also a factor in how we decided what shapes were best to detect. These shapes are quite different which helps the model distinguish between them.
+To experiment with detecting shapes, we designed a neural network to detect whether the hand was open in a palm or closed in a fist. The accuracy it achieves for our dataset is 98%. 
+
+<img src="assets/images/trainingplot.png?raw=true" alt="Test and Train Plots" width="1000"/>
+<center><em>Figure 7</em></center>
+
+Using this model with MediaPipe we can see the predictor is able to accurately track the hand and the shape it is in. We tried several variations for different aspects of the model, like size, output layer, optimizer, and loss function. We landed on the model described in the methods section because it was able to not just accurately pick the correct shape, but the softmax output also showed it chooses the correct shape with high probability. This is good for our use case because when the hand is not in a fist or a palm, the probabilities given by the model will be low and we can handle cases when the user is not showing a palm or fist. This was also a factor in how we decided what shapes were best to detect. These shapes are quite different which helps the model distinguish between them.
 
 <img src="assets/images/justin-gestures.png?raw=true" alt="Recognition" width="1000"/>
-
-##### Simulation
+<center><em>Figure 8</em></center>
 
 ##### Velocity
 One approach that we attempted in the early- to middle-stages of the project workflow was the calculation of velocity between frames to better inform the dynamics of the fluid simulation. This system was implemented in order to tie into the element of user interaction that we were attempting to build, in order to inform the fluid simulation and the behavior of the movement of the particles (e.g., if a user moved their hand quickly across the screen from left to right, the on-screen fluid would move from left to right at the speed that the hand moved). The way this functionality was implemented was to calculate the Euclidean distance between two subsequent frames with detected hands for each of the 21 landmarks mapped out (42 in the case of two hands being in frame). The velocity for each landmark would automatically be set to zero if there was no prior frame with a detected hand. This velocity-calculation system worked well for calculating the velocity between hands, but when it came to implementing interaction with the fluid simulator, this functionality proved somewhat incompatible with the sim.stable_fluid library, and thus was shelved to make the needed progress towards accomplishing the task we set forth to solve. 
