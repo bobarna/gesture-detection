@@ -1,6 +1,7 @@
 # Add current directory to Python path 
 import sys
 import os
+import time
 
 # Fluid simulator and landmarking imports
 import sim.stable_fluid
@@ -10,7 +11,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 import cv2
-from visu.visu import draw_landmarks_on_image, get_coordinates, crop_square
+from visu.visu import draw_landmarks_on_image, crop_square
 from detector.detector import create_detector
 from shape_detector.shape_detect import classify
 from bent_finger.shape import extend_or_bend
@@ -81,6 +82,9 @@ def main(args):
     prev_coordinate_x = None
     prev_coordinate_y = None
 
+    # time tracking
+    times = []
+
     ### Main Loop ###
     while True:
         ret, frame = camera_capture.read()
@@ -144,9 +148,13 @@ def main(args):
         mouse_data = np.zeros(8, dtype=np.float32)
         if pts != []:
             for hand in pts:
+                st = time.time_ns() / 1000000
                 pred = model(torch.tensor(hand.flatten(), dtype=torch.float32))
 
                 label = classify(pred)
+                ft = time.time_ns() / 1000000
+                inference_time = ft - st
+
 
                 # Display the resulting frame
                 height, width, _ = frame.shape
@@ -203,6 +211,7 @@ def main(args):
     # Release the capture
     camera_capture.release()
     cv2.destroyAllWindows()
+
 
 
 if __name__ == "__main__":
