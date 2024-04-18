@@ -182,6 +182,7 @@ We believe that our approach worked. In the operation of the program, we are abl
 | Fluid Simulation             | ✅                 |                    |                    |                    |
 | Merging the code             | ✅                 | ✅                 | ✅                 | ✅                 |
 | Combining Techniques         | ✅                 | ✅                 | ✅                 | ✅                 |
+| Related Works                |                    |                    | ✅                 |                    |
 | Writing the report           | ✅                 | ✅                 | ✅                 | ✅                 |
 | Github Setup                 | ✅                 |                    |                    |                    |
 | Github Page                  |                    | ✅                 |                    | ✅                 |
